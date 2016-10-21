@@ -7,11 +7,11 @@
 <body>
     <?php
         require '../serverconnect.php';
-        function doShit($short, $link){
+        function addVideoToShorthand($short, $link){
             $videoId = parseVideoIdFromLink($link);
             $data = parseJSON($videoId);
             $scrapeData = scrapeVideo($data);
-            DBThisBitchUp($scrapeData, $short, $link);
+            insertToDB($scrapeData, $short, $link);
         }
 
         function parseVideoIdFromLink($link){
@@ -35,11 +35,13 @@
             return $arr;
         }
 
-        function DBThisBitchUp($arr, $short, $link){
-            $title = mysql_real_escape_string($arr["title"]);
-            $image = mysql_real_escape_string($arr["image"]);
-            $description = mysql_real_escape_string($arr["description"]);
+        function insertToDB($arr, $short, $link){
             global $mysql;
+            $title = $mysql->escape_string($arr["title"]);
+            $image = $mysql->escape_string($arr["image"]);
+            $description = $mysql->escape_string($arr["description"]);
+            $short = $mysql->escape_string($short);
+            $link = $mysql->escape_string($link);
             $query = "INSERT INTO youtube 
                 VALUES (
                     '$title',
@@ -54,7 +56,7 @@
         if (isset($_POST["link"])){
             $link = $_POST["link"];
             $short = $_POST["short"];
-            doShit($short, $link);
+            addVideoToShorthand($short, $link);
             unset($_POST["link"]);
             unset($_POST["short"]);
         }
