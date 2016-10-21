@@ -68,7 +68,7 @@
             $mysql->query($query);
         }
     
-        function deletDis($delete){
+        function deleteThis($delete){
             global $mysql;
             $mysql->escape_string($delete);
             $query = ("DELETE FROM youtube where short='$delete'");
@@ -84,7 +84,7 @@
         }
     
         if (isset($_POST["delete"])){
-            deletDis($_POST["delete"]);
+            deleteThis($_POST["delete"]);
             unset($_POST["delete"]);
         }
 
@@ -111,7 +111,7 @@
                 }
             ?> </div>
             <form method="post">
-                <input type="text" name="delete" placeholder="delet dis bad content" class="delete">
+                <input type="text" name="delete" placeholder="delete short" class="delete">
                 <input type="submit">
             </form>
         </div>
