@@ -1,15 +1,15 @@
 <?php
 require '../serverconnect.php';
 
-$short = $_GET["val"];
+$short = $mysql->escape_string($_GET["val"]);
 
 $query = "SELECT title, image, description, link FROM youtube WHERE short='$short'";
 $result = $mysql->query($query);
 $row = $result->fetch_assoc();
-$title = $row['title'];
-$image = $row['image'];
-$description = $row['description'];
-$link = $row['link'];
+$title = htmlspecialchars($row['title'], ENT_QUOTES);
+$image = htmlspecialchars($row['image'], ENT_QUOTES);
+$description = htmlspecialchars($row['description'], ENT_QUOTES);
+$link = htmlspecialchars($row['link'], ENT_QUOTES);
 
 echo "<!DOCTYPE html><html>";
 include_once("../common/analyticstracking.php");
