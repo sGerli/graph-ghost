@@ -27,9 +27,24 @@
         }
 
         function scrapeVideo($data){
+            if (isset($data["items"][0]["snippet"]["thumbnails"]["maxres"])){
+                $image = $data["items"][0]["snippet"]["thumbnails"]["maxres"]["url"];
+            }
+            else if (isset($data["items"][0]["snippet"]["thumbnails"]["standard"])){
+                $image = $data["items"][0]["snippet"]["thumbnails"]["standard"]["url"];
+            }
+            else if (isset($data["items"][0]["snippet"]["thumbnails"]["high"])){
+                $image = $data["items"][0]["snippet"]["thumbnails"]["high"]["url"];
+            }
+            else if (isset($data["items"][0]["snippet"]["thumbnails"]["medium"])){
+                $image = $data["items"][0]["snippet"]["thumbnails"]["medium"]["url"];
+            }
+            else{
+                $image = $data["items"][0]["snippet"]["thumbnails"]["default"]["url"];
+            }
             $arr = array(
                 "title" => $data["items"][0]["snippet"]["title"],
-                "image" => $data["items"][0]["snippet"]["thumbnails"]["maxres"]["url"],
+                "image" => $image,
                 "description" => $data["items"][0]["snippet"]["description"],
             );
             return $arr;
@@ -64,26 +79,26 @@
         $query = "SELECT link, short FROM youtube ORDER BY short";
         $result = $mysql->query($query);
     ?>
-    <div class="container">
-        <h1>Shortened YouTube Links</h1>
-        <form method="post">
-            <input type="text" name="link" placeholder="full link">
-            <input type="text" name="short" placeholder="abbreviation">
-            <input type="submit" value="submit"> </form>
-        <script>
-            function popup(link){
-                prompt("Copy the selected link", "https://peteryang.io/yt/" + link)
-            }
-        </script>
-        <div class="links">
-            <?php
+        <div class="container">
+            <h1>Shortened YouTube Links</h1>
+            <form method="post">
+                <input type="text" name="link" placeholder="full link">
+                <input type="text" name="short" placeholder="abbreviation">
+                <input type="submit" value="submit"> </form>
+            <script>
+                function popup(link) {
+                    prompt("Copy the selected link", "https://peteryang.io/yt/" + link)
+                }
+            </script>
+            <div class="links">
+                <?php
                 while ($row = $result->fetch_assoc()){
                     echo "<div><a href='${row['link']}' target='_blank'>${row['link']}</a></div>";
                     $withQuotes = "'${row['short']}'";
                     echo "<div onclick=\"popup($withQuotes)\">${row['short']}</div>";
                 }
             ?> </div>
-    </div>
+        </div>
 </body>
 
 </html>
