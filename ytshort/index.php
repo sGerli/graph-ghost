@@ -67,6 +67,13 @@
                 )";
             $mysql->query($query);
         }
+    
+        function deletDis($delete){
+            global $mysql;
+            $mysql->escape_string($delete);
+            $query = ("DELETE FROM youtube where short='$delete'");
+            $mysql->query($query);
+        }
 
         if (isset($_POST["link"])){
             $link = $_POST["link"];
@@ -74,6 +81,11 @@
             addVideoToShorthand($short, $link);
             unset($_POST["link"]);
             unset($_POST["short"]);
+        }
+    
+        if (isset($_POST["delete"])){
+            deletDis($_POST["delete"]);
+            unset($_POST["delete"]);
         }
 
         $query = "SELECT link, short FROM youtube ORDER BY short";
@@ -83,8 +95,8 @@
             <h1>Shortened YouTube Links</h1>
             <form method="post">
                 <input type="text" name="link" placeholder="full link">
-                <input type="text" name="short" placeholder="abbreviation">
-                <input type="submit" value="submit"> </form>
+                <input class="right" type="text" name="short" placeholder="abbreviation">
+                <input type="submit"> </form>
             <script>
                 function popup(link) {
                     prompt("Copy the selected link", "https://peteryang.io/yt/" + link)
@@ -98,6 +110,10 @@
                     echo "<div onclick=\"popup($withQuotes)\">${row['short']}</div>";
                 }
             ?> </div>
+            <form method="post">
+                <input type="text" name="delete" placeholder="delet dis bad content" class="delete">
+                <input type="submit">
+            </form>
         </div>
 </body>
 
