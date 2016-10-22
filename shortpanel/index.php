@@ -99,7 +99,7 @@
                 <input type="submit"> </form>
             <script>
                 function popup(link) {
-                    prompt("Copy the selected link", "https://<?php echo $_SERVER[HTTP_HOST];?>" + link)
+                    prompt("Copy the selected link", "https://<?php echo $_SERVER['HTTP_HOST'];?>/" + link)
                 }
             </script>
             <div class="links">
