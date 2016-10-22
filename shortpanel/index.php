@@ -16,7 +16,7 @@
         }
         else{
             $scrapeData = scrapeOtherLink($link);
-            $scrapeData = cleanScrapeData($scrapeData);
+            $scrapeData = cleanScrapeData($scrapeData, $link);
         }
         insertToDB($scrapeData, $short, $link);
     }
@@ -44,12 +44,21 @@
         return $rmetas;
     }
     
-    function cleanScrapeData($scrapeData){
+    function cleanScrapeData($scrapeData, $link){
         $newScrapeData = array(
             "title" => $scrapeData["og:title"],
             "image" => $scrapeData["og:image"],
             "description" => $scrapeData["og:description"],
         );
+        
+        // og:image is often a relative link
+        // If link does not start with http, it is relative
+        if (substr($newScrapeData["image"], 0, 4) !== "http"){
+            // Trim the trailing slash
+            $link = rtrim($link, "/");
+            // Append relative link to absolute link to get full dir
+            $newScrapeData["image"] = $link . $newScrapeData["image"];
+        }
         return $newScrapeData;
     }
     
