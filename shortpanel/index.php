@@ -21,6 +21,7 @@
         if (!insertToDB($scrapeData, $short, $link)){
             return false;
         }
+        return true;
     }
 
     function scrapeYouTubeLink($link){
@@ -108,21 +109,23 @@
         if ($result !== NULL){
             return false;
         }
-        $title = $mysql->escape_string($scrapeData["title"]);
-        $image = $mysql->escape_string($scrapeData["image"]);
-        $description = $mysql->escape_string($scrapeData["description"]);
-        $short = $mysql->escape_string($short);
-        $link = $mysql->escape_string($link);
-        $query = "INSERT INTO linkTable 
-            VALUES (
-                '$title',
-                '$image',
-                '$description',
-                '$short',
-                '$link'
-            )";
-        $mysql->query($query);
-        return true;
+        else{
+            $title = $mysql->escape_string($scrapeData["title"]);
+            $image = $mysql->escape_string($scrapeData["image"]);
+            $description = $mysql->escape_string($scrapeData["description"]);
+            $short = $mysql->escape_string($short);
+            $link = $mysql->escape_string($link);
+            $query = "INSERT INTO linkTable 
+                VALUES (
+                    '$title',
+                    '$image',
+                    '$description',
+                    '$short',
+                    '$link'
+                )";
+            $mysql->query($query);
+            return true;
+        }
     }
 
     function deleteThis($delete){
