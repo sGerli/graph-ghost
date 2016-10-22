@@ -18,7 +18,9 @@
             $scrapeData = scrapeOtherLink($link);
             $scrapeData = cleanScrapeData($scrapeData, $link);
         }
-        insertToDB($scrapeData, $short, $link);
+        if (!insertToDB($scrapeData, $short, $link)){
+            return false;
+        }
     }
 
     function scrapeYouTubeLink($link){
@@ -100,6 +102,12 @@
 
     function insertToDB($scrapeData, $short, $link){
         global $mysql;
+        $query = "SELECT short FROM linkTable WHERE short = '$short'";
+        $result = $mysql->query($query)->fetch_assoc();
+        // If the short already exists in the database
+        if ($result !== NULL){
+            return false;
+        }
         $title = $mysql->escape_string($scrapeData["title"]);
         $image = $mysql->escape_string($scrapeData["image"]);
         $description = $mysql->escape_string($scrapeData["description"]);
@@ -114,6 +122,7 @@
                 '$link'
             )";
         $mysql->query($query);
+        return true;
     }
 
     function deleteThis($delete){
@@ -126,7 +135,9 @@
     if (isset($_POST["link"])){
         $link = $_POST["link"];
         $short = $_POST["short"];
-        addVideoToShorthand($short, $link);
+        if (!addVideoToShorthand($short, $link)){
+            echo "Short already exists. Not replacing with new one";
+        }
         unset($_POST["link"]);
         unset($_POST["short"]);
     }
@@ -140,7 +151,7 @@
     $result = $mysql->query($query);
     ?>
         <div class="container">
-            <h1>Shortened YouTube Links</h1>
+            <h1>Shortened Links</h1>
             <form method="post">
                 <input type="text" name="link" placeholder="full link">
                 <input class="right" type="text" name="short" placeholder="abbreviation">
