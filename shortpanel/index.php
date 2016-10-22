@@ -57,7 +57,7 @@
             $description = $mysql->escape_string($arr["description"]);
             $short = $mysql->escape_string($short);
             $link = $mysql->escape_string($link);
-            $query = "INSERT INTO youtube 
+            $query = "INSERT INTO linkTable 
                 VALUES (
                     '$title',
                     '$image',
@@ -71,7 +71,7 @@
         function deleteThis($delete){
             global $mysql;
             $mysql->escape_string($delete);
-            $query = ("DELETE FROM youtube where short='$delete'");
+            $query = ("DELETE FROM linkTable where short='$delete'");
             $mysql->query($query);
         }
 
@@ -88,7 +88,7 @@
             unset($_POST["delete"]);
         }
 
-        $query = "SELECT link, short FROM youtube ORDER BY short";
+        $query = "SELECT link, short FROM linkTable ORDER BY short";
         $result = $mysql->query($query);
     ?>
         <div class="container">
@@ -99,7 +99,7 @@
                 <input type="submit"> </form>
             <script>
                 function popup(link) {
-                    prompt("Copy the selected link", "https://peteryang.io/yt/" + link)
+                    prompt("Copy the selected link", "https://<?php echo $_SERVER[HTTP_HOST];?>" + link)
                 }
             </script>
             <div class="links">

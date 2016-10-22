@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# Redirects non http links to https
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Redirects non existent links to short link handler
+# If non existent link is not a short link, handler will redirect to 404 page
+RewriteCond %{REQUEST_FILENAME} !index.php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /short.php?val=$1

@@ -3,7 +3,7 @@ require '../serverconnect.php';
 
 $short = $mysql->escape_string($_GET["val"]);
 
-$query = "SELECT title, image, description, link FROM youtube WHERE short='$short'";
+$query = "SELECT title, image, description, link FROM linkTable WHERE short='$short'";
 $result = $mysql->query($query);
 if (!$result->num_rows == 0){
     $row = $result->fetch_assoc();
@@ -13,9 +13,11 @@ if (!$result->num_rows == 0){
     $link = htmlspecialchars($row['link'], ENT_QUOTES);
 
     echo "<!DOCTYPE html><html>";
+    
+    //Google analytics tracker
     include_once("../common/analyticstracking.php");
     echo "<meta property='og:title' content='$title'>";
-    echo "<meta property='og:url' content='https://peteryang.io/yt/$short'>";
+    echo "<meta property='og:url' content='https://$_SERVER[HTTP_HOST]$short'>";
     echo "<meta property='og:image' content='$image'>";
     echo "<meta property='og:description' content='$description'>";
     echo "<script>location = '$link'</script>";
@@ -23,5 +25,5 @@ if (!$result->num_rows == 0){
     echo "</html>";
 }
 else{
-    echo "Link not found";
+    echo "<script>location='404.php'</script>";
 }
