@@ -15,7 +15,7 @@ if (!$result->num_rows == 0){
     echo "<!DOCTYPE html><html>";
     
     //Google analytics tracker
-    include_once("../common/analyticstracking.php");
+    include_once("common/analyticstracking.php");
     echo "<meta property='og:title' content='$title'>";
     echo "<meta property='og:url' content='https://${_SERVER['HTTP_HOST']}/$short'>";
     echo "<meta property='og:image' content='$image'>";
@@ -25,5 +25,5 @@ if (!$result->num_rows == 0){
     echo "</html>";
 }
 else{
-    echo "<script>location='404.php'</script>";
+    echo "<script>location='https://${_SERVER['HTTP_HOST']}/404.php'</script>";
 }
