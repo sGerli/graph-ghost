@@ -43,7 +43,7 @@ if (!$result->num_rows == 0){
     echo "<meta property='og:description' content='$description'>";
     if ($isYouTube){
         // Autplay is necessary otherwise Facebook will require clicking two play buttons
-        echo "<meta property='og:video' content='https://youtube.com/v/$videoId&autoplay=1'";
+        echo "<meta property='og:video' content='https://youtube.com/v/$videoId&autoplay=1'>";
     }
     echo "<script>location = '$link'</script>";
     echo "<noscript><a href='$link'>Click here to go to manually go to link</a>Please enable JavaScript to automatically proceed to link</noscript>";

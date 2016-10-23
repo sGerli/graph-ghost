@@ -1,3 +1,10 @@
+document.addEventListener("DOMContentLoaded", function(){
+        document.getElementById("flash").addEventListener("click", function(){
+            closeFlash()
+        })
+    }
+)
+
 function printFlash(message){
     var flash = document.getElementById('flash')
     flash.innerHTML = "<h2>"+ message + "</h2><br><h3>Click to dismiss</h3>"
@@ -6,7 +13,7 @@ function printFlash(message){
 
 function closeFlash(){
     var flash = document.getElementById('flash')
-    flash.className = "hidden"
+    flash.parentNode.removeChild(flash)
 }
 
 function edit(short){

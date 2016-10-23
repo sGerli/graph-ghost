@@ -9,6 +9,7 @@ This link shortener is intended to be installed on a server with a database. Whe
 * Notify user when they try to delete a short that doesn't exist
 * Additional sorting and filtering options for main list
 * Depricate delete form in favor of a delete button under the edit menu
+* Ability to close edit menu
 
 ## Known Bugs
 * Currently does not provide image or video height/width so Facebook cannot asyncronously download a preview

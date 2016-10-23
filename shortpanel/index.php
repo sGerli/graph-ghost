@@ -179,6 +179,13 @@
         }
     }
     
+    /**
+        @param String $oldShort
+            Preserved old short to be used as key
+            
+        @param array $ogs
+            Contains key/data pairs for og:title, image, and description
+    */
     function updateDBEntry($oldShort, $ogs, $short, $link){
         global $mysql;
         $title = $mysql->escape_string($ogs["title"]);
@@ -211,7 +218,6 @@
         // Add video to database with scraped og - if failed, return false
         if (!addVideoToShorthand($short, $link)){
             $_SESSION["flash"] = "Short already exists. Not replacing with new one.";
-            //echo "Short already exists. Not replacing with new one";
         }
         unset($_POST["link"]);
         unset($_POST["short"]);
@@ -310,10 +316,9 @@
             <form method="post" id="editForm" class="hidden">
                 <input type="text" name="editRequest" id="editField"> </form>
         </div>
-        <div id="flash" class="hidden" onclick="closeFlash()"></div>
         <?php
             if (isset($_SESSION['flash'])){
-                echo "<script>printFlash('{$_SESSION['flash']}')</script>";
+                echo "<div id='flash'><h2>${_SESSION['flash']}</h2><h3>Click to dismiss</h3></div>";
                 unset($_SESSION['flash']);
             }
         ?>
