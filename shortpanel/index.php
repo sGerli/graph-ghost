@@ -2,12 +2,13 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="ui.css"> </head>
+    <link rel="stylesheet" href="ui.css">
+    <script src="script.js"></script>
+</head>
 
 <body>
     <?php
     require '../serverconnect.php';
-    
     /**
         @param String $short
             The key used to grab full data from Database
@@ -153,7 +154,7 @@
     */
     function insertToDB($scrapeData, $short, $link){
         global $mysql;
-        $query = "SELECT short FROM linkTable WHERE short = '$short'";
+        $query = "SELECT short FROM linkTable WHERE short='$short'";
         $result = $mysql->query($query)->fetch_assoc();
         // If the short already exists in the database
         if ($result !== NULL){
@@ -177,6 +178,17 @@
             return true;
         }
     }
+    
+    function updateDBEntry($oldShort, $ogs, $short, $link){
+        global $mysql;
+        $title = $mysql->escape_string($ogs["title"]);
+        $image = $mysql->escape_string($ogs["image"]);
+        $description = $mysql->escape_string($ogs["description"]);
+        $short = $mysql->escape_string($short);
+        $link = $mysql->escape_string($link);
+        $query = "UPDATE linkTable SET title='$title', image='$image', description='$description', short='$short', link='$link' WHERE short='$oldShort'";
+        $mysql->query($query);
+    }
 
     /**
         @param String $delete
@@ -198,7 +210,8 @@
         $short = $_POST["short"];
         // Add video to database with scraped og - if failed, return false
         if (!addVideoToShorthand($short, $link)){
-            echo "Short already exists. Not replacing with new one";
+            $_SESSION["flash"] = "Short already exists. Not replacing with new one.";
+            //echo "Short already exists. Not replacing with new one";
         }
         unset($_POST["link"]);
         unset($_POST["short"]);
@@ -213,7 +226,7 @@
     ?>
         <div class="container">
             <h1>Shortened Links</h1>
-            <form method="post">
+            <form method="post" id="createForm">
                 <input type="text" name="link" placeholder="full link">
                 <input class="right" type="text" name="short" placeholder="abbreviation">
                 <input type="submit"> </form>
@@ -222,8 +235,59 @@
                     prompt("Copy the selected link", "https://<?php echo $_SERVER['HTTP_HOST'];?>/" + link)
                 }
             </script>
+            <div class="edit-box hidden" id="edit-container">
+                <div class="container">
+                    <?php
+                    function showEditBox(){
+                        // Sets className to only edit-box, thus removing hidden
+                        echo "<script>document.getElementById('edit-container').className = 'edit-box'</script>";
+                    }
+                    function setEditBoxValues(){
+                        global $mysql, $editTitle, $editImage, $editDescription, $editShort, $editLink;
+                        $short = $_POST["editRequest"];
+                        $query = "SELECT * FROM linkTable WHERE short = '$short'";
+                        $result = $mysql->query($query)->fetch_assoc();
+                        $editTitle = $result["title"];
+                        $editImage = $result["image"];
+                        $editDescription = $result["description"];
+                        $editShort = $result["short"];
+                        $editLink = $result["link"];
+                    }
+                    if (isset($_POST["editRequest"])){
+                        showEditBox();
+                        setEditBoxValues();
+                        unset($_POST["editRequest"]);
+                    }
+                    if (isset($_POST["newTitle"])){
+                        $ogs = array(
+                            "title" => $_POST["newTitle"],
+                            "image" => $_POST["newImage"],
+                            "description" => $_POST["newDescription"],
+                        );
+                        $oldShort = $_POST["oldShort"];
+                        $newShort = $_POST["newShort"];
+                        $newLink = $_POST["newLink"];
+                        updateDBEntry($oldShort, $ogs, $newShort, $newLink);
+                        unset($_POST["newTitle"]);
+                    }
+                ?>
+                        <form method="post" id="newData">
+                            <h2>Title</h2>
+                            <input type="text" name="newTitle" value="<?php if (isset($editTitle)) echo $editTitle;?>">
+                            <h2>Image Link</h2>
+                            <input type="text" name="newImage" value="<?php if (isset($editImage)) echo $editImage;?>">
+                            <h2>Description</h2>
+                            <textarea rows="3" name="newDescription"><?php if (isset($editDescription)) echo $editDescription;?></textarea>
+                            <input type="hidden" name="oldShort" value="<?php if (isset($editShort)) echo $editShort;?>">
+                            <h2>Short</h2>
+                            <input type="text" name="newShort" value="<?php if (isset($editShort)) echo $editShort;?>">
+                            <h2>Full Link</h2>
+                            <input type="text" name="newLink" value="<?php if (isset($editLink)) echo $editLink;?>">
+                            <input type="submit" value="submit"> </form>
+                </div>
+            </div>
             <div class="links">
-            <?php
+                <?php
                 /**
                     Prints existing shortened links to the main console
                 */
@@ -237,13 +301,22 @@
                     $withQuotes = "'${row['short']}'";
                     // Clicking on the short will open a prompt with the text highlighted
                     // TODO Automatic copy to clipboard on click with fallback methods
-                    echo "<div onclick=\"popup($withQuotes)\">${row['short']}</div>";
+                    echo "<div><span onclick=\"popup($withQuotes)\">${row['short']}</span><img src='edit.svg' onclick=\"edit('${row['short']}')\"></div>";
                 }
             ?> </div>
-            <form method="post">
+            <form method="post" id="deleteForm">
                 <input type="text" name="delete" placeholder="delete short" class="delete">
                 <input type="submit"> </form>
+            <form method="post" id="editForm" class="hidden">
+                <input type="text" name="editRequest" id="editField"> </form>
         </div>
+        <div id="flash" class="hidden" onclick="closeFlash()"></div>
+        <?php
+            if (isset($_SESSION['flash'])){
+                echo "<script>printFlash('{$_SESSION['flash']}')</script>";
+                unset($_SESSION['flash']);
+            }
+        ?>
 </body>
 
 </html>
