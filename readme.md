@@ -5,6 +5,10 @@ This link shortener is intended to be installed on a server with a database. Whe
 * Easier method of copying newly generated short link
 * More intutive way of managing preexisting short links. Will prompt user to either overwrite with new full link or cancel
 * Package management with composer
+* Parse youtu.be links the same way as a normal YouTube link
+* Notify user when they try to delete a short that doesn't exist
+* Additional sorting and filtering options for main list
 
 ## Known Bugs
+* Currently does not provide image or video height/width so Facebook cannot asyncronously download a preview
 https://en.wikipedia.org/wiki/Category:Lists_of_insects
