@@ -106,7 +106,9 @@ a:hover {
 
 .links div:nth-child(odd) {
     width: 70%;
-    overflow-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 

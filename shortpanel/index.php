@@ -13,17 +13,9 @@ require '../serverconnect.php';
         False on failed database entry
 */
 function addVideoToShorthand($short, $link){
-    scrapeYouTubeLink($link);
-    // If link host contains YouTube, parse YouTube video
-    // TODO - Parse youtu.be links
-    if (strpos(parse_url($link, PHP_URL_HOST), 'youtube')){
-        $scrapeData = scrapeYouTubeLink($link);
-    }
-    else{
-        $scrapeData = scrapeOtherLink($link);
-        // This scraper returns og:tag instead of tag so we have to clean it
-        $scrapeData = cleanScrapeData($scrapeData, $link);
-    }
+    $scrapeData = scrapeLink($link);
+    // This scraper returns og:tag instead of tag so we have to clean it
+    $scrapeData = cleanScrapeData($scrapeData, $link);
     // insertToDB will fail if a short already exists
     if (!insertToDB($scrapeData, $short, $link)){
         return false;
@@ -32,21 +24,10 @@ function addVideoToShorthand($short, $link){
 }
 
 /**
-    @return array $scrapeData
-        An array containing the relevant og data
-*/
-function scrapeYouTubeLink($link){
-    $videoId = parseVideoIdFromLink($link);
-    $data = parseJSON($videoId);
-    $scrapeData = scrapeVideo($data);
-    return $scrapeData;
-}
-
-/**
     @return array $rmetas
         An array containing the relevant og data
 */
-function scrapeOtherLink($link){
+function scrapeLink($link){
     libxml_use_internal_errors(true);
     $doc = new DomDocument();
     $doc->loadHTMLFile($link);
@@ -81,59 +62,6 @@ function cleanScrapeData($scrapeData, $link){
         $newScrapeData["image"] = $link . $newScrapeData["image"];
     }
     return $newScrapeData;
-}
-
-/**
-    @return String
-        The video ID of a YouTube video
-*/
-function parseVideoIdFromLink($link){
-    $linkParsed = parse_url($link, PHP_URL_QUERY);
-    $arr = explode("v=", $linkParsed);
-    return $arr[1];
-}
-
-/**
-    @param String $videoId
-        YouTube video ID
-
-    @return Decoded json in array format with all relavant video data
-*/
-function parseJSON($videoId){
-    global $YouTubeAPIKey;
-    $json = file_get_contents("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=$videoId&key=$YouTubeAPIKey");
-    return json_decode($json, true);
-}
-
-/**
-    @param array $data
-        The scraped YouTube json in array format
-
-    @return array $arr
-        A condensed array with the only necessary og data
-*/
-function scrapeVideo($data){
-    if (isset($data["items"][0]["snippet"]["thumbnails"]["maxres"])){
-        $image = $data["items"][0]["snippet"]["thumbnails"]["maxres"]["url"];
-    }
-    else if (isset($data["items"][0]["snippet"]["thumbnails"]["standard"])){
-        $image = $data["items"][0]["snippet"]["thumbnails"]["standard"]["url"];
-    }
-    else if (isset($data["items"][0]["snippet"]["thumbnails"]["high"])){
-        $image = $data["items"][0]["snippet"]["thumbnails"]["high"]["url"];
-    }
-    else if (isset($data["items"][0]["snippet"]["thumbnails"]["medium"])){
-        $image = $data["items"][0]["snippet"]["thumbnails"]["medium"]["url"];
-    }
-    else{
-        $image = $data["items"][0]["snippet"]["thumbnails"]["default"]["url"];
-    }
-    $arr = array(
-        "title" => $data["items"][0]["snippet"]["title"],
-        "image" => $image,
-        "description" => $data["items"][0]["snippet"]["description"],
-    );
-    return $arr;
 }
 
 /**
@@ -199,6 +127,10 @@ function deleteThis($delete){
     $mysql->query($query);
 }
 
+/**
+    @param String $delete
+        This is the short to be used as a key to delete an entire entry from the database
+*/
 function showEditBox(){
     global $mysql;
     $short = $_POST["editRequest"];

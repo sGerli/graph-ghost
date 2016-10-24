@@ -8,7 +8,10 @@ require 'serverconnect.php';
 function parseVideoIdFromLink($link){
     $linkParsed = parse_url($link, PHP_URL_QUERY);
     $arr = explode("v=", $linkParsed);
-    return $arr[1];
+    if ($arr[1] !== NULL){
+        return $arr[1];
+    }
+    return false;
 }
 
 /**
@@ -28,10 +31,10 @@ if (!$result->num_rows == 0){
     $link = htmlspecialchars($row['link'], ENT_QUOTES);
     
     // If it is a YouTube link, we create an og:video tag so Facebook can embed the player
-    $isYouTube = false;
-    if (strpos(parse_url($link, PHP_URL_HOST), 'youtube')){
+    $isYouTubeVideo = false;
+    if (parseVideoIdFromLink($link) !== false){
         $videoId = parseVideoIdFromLink($link);
-        $isYouTube = true;
+        $isYouTubeVideo = true;
     }
     echo "<!DOCTYPE html><html>";
     
@@ -41,7 +44,7 @@ if (!$result->num_rows == 0){
     echo "<meta property='og:url' content='https://${_SERVER['HTTP_HOST']}/$short'>";
     echo "<meta property='og:image' content='$image'>";
     echo "<meta property='og:description' content='$description'>";
-    if ($isYouTube){
+    if ($isYouTubeVideo){
         // Autplay is necessary otherwise Facebook will require clicking two play buttons
         echo "<meta property='og:video' content='https://youtube.com/v/$videoId&autoplay=1'>";
     }
