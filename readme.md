@@ -10,6 +10,5 @@ This link shortener is intended to be installed on a server with a database. Whe
 * Parse non YouTube videos the same way a YouTube video is
 
 ## Known Bugs
-* Non video YouTube links do not scrape properly - Script assumes all YouTube links are videos
 * Currently does not provide image or video height/width so Facebook cannot asyncronously download a preview
 * https://en.wikipedia.org/wiki/Category:Lists_of_insects
