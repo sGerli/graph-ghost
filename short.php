@@ -50,5 +50,6 @@ if (!$result->num_rows == 0){
     echo "</html>";
 }
 else{
-    echo "<script>location='https://${_SERVER['HTTP_HOST']}/404.php'</script>";
+    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+    include("404.php");
 }

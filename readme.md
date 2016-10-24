@@ -7,6 +7,7 @@ This link shortener is intended to be installed on a server with a database. Whe
 * Package management with composer
 * Parse youtu.be links the same way as a normal YouTube link
 * Additional sorting and filtering options for main list
+* Parse non YouTube videos the same way a YouTube video is
 
 ## Known Bugs
 * Currently does not provide image or video height/width so Facebook cannot asyncronously download a preview
