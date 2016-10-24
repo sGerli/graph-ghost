@@ -1,5 +1,128 @@
 <?php
+// Connects to MySQL Database and creates $mysql object
 require '../serverconnect.php';
+// IF a link is created THEN
+doLinkCreation();
+// IF a link is deleted THEN
+doLinkDeletion();
+// IF a flash exists THEN
+doFlashCreation();
+// IF an edit is requested THEN
+doEditBoxCreation();
+// IF an edit is submitted THEN
+doEditBoxSubmission();
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="ui.css">
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Shortened Links</h1>
+        <form method="post" id="createForm">
+            <input type="text" name="link" placeholder="full link">
+            <input class="right" type="text" name="short" placeholder="abbreviation">
+            <input type="submit"> </form>
+        <div class="links">
+            <?php printLinks(); ?>
+        </div>
+        <form method="post" id="deleteForm">
+            <input type="hidden" name="delete" id="delete"> 
+            <input type="submit"> </form>
+        <form method="post" id="editForm" class="hidden">
+            <input type="text" name="editRequest" id="editField"> </form>
+    </div>
+</body>
+
+</html>
+
+<?php
+/**
+    After a form submit for a new link
+*/
+function doLinkCreation(){
+    if (isset($_POST["link"])){
+        $link = $_POST["link"];
+        $short = $_POST["short"];
+        // Add video to database with scraped og - if failed, return false
+        if (!addVideoToShorthand($short, $link)){
+            $_SESSION["flash"] = "Short already exists. Not replacing with new one.";
+        }
+        $_POST = array();
+    }
+}
+
+/**
+    After a form submit to delete a preexisting link
+*/
+function doLinkDeletion(){
+    if (isset($_POST["delete"])){
+        deleteThis($_POST["delete"]);
+        $_POST = array();
+    }
+}
+
+/**
+    Prints a flash message if one exists
+*/
+function doFlashCreation(){
+    if (isset($_SESSION['flash'])){
+        echo "<div id='flash'><h2>${_SESSION['flash']}</h2><h3>Click to dismiss</h3></div>";
+        unset($_SESSION['flash']);
+    }
+}
+
+/**
+    If an edit is requested, the edit panel is displayed
+*/
+function doEditBoxCreation(){
+    if (isset($_POST["editRequest"])){
+        showEditBox();
+        $_POST = array();
+    }
+}
+
+/**
+    If an edit is submitted, the database is updated
+*/
+function doEditBoxSubmission(){
+    if (isset($_POST["newTitle"])){
+        $ogs = array(
+            "title" => $_POST["newTitle"],
+            "image" => $_POST["newImage"],
+            "description" => $_POST["newDescription"],
+        );
+        $oldShort = $_POST["oldShort"];
+        $newShort = $_POST["newShort"];
+        $newLink = $_POST["newLink"];
+        updateDBEntry($oldShort, $ogs, $newShort, $newLink);
+        $_POST = array();
+    }
+}
+
+/**
+    Prints existing shortened links to the main console
+*/
+// TODO Other sorting and filtering options
+function printLinks(){
+    global $mysql;
+    // Prints by shorts in alphabetical order
+    $query = "SELECT link, short FROM linkTable ORDER BY short";
+    $result = $mysql->query($query);
+    while ($row = $result->fetch_assoc()){
+        // Clicking on full link will take you to the destination in a new tab
+        echo "<div><a href='${row['link']}' target='_blank'>${row['link']}</a></div>";
+        $withQuotes = "'${row['short']}'";
+        // Clicking on the short will open a prompt with the text highlighted
+        echo "<div><span onclick=\"popup($withQuotes)\">${row['short']}</span><img src='edit.svg' onclick=\"edit('${row['short']}')\"></div>";
+    }
+}
+
 /**
     @param String $short
         The key used to grab full data from Database
@@ -99,35 +222,6 @@ function insertToDB($scrapeData, $short, $link){
 }
 
 /**
-    @param String $oldShort
-        Preserved old short to be used as key
-
-    @param array $ogs
-        Contains key/data pairs for og:title, image, and description
-*/
-function updateDBEntry($oldShort, $ogs, $short, $link){
-    global $mysql;
-    $title = $mysql->escape_string($ogs["title"]);
-    $image = $mysql->escape_string($ogs["image"]);
-    $description = $mysql->escape_string($ogs["description"]);
-    $short = $mysql->escape_string($short);
-    $link = $mysql->escape_string($link);
-    $query = "UPDATE linkTable SET title='$title', image='$image', description='$description', short='$short', link='$link' WHERE short='$oldShort'";
-    $mysql->query($query);
-}
-
-/**
-    @param String $delete
-        This is the short to be used as a key to delete an entire entry from the database
-*/
-function deleteThis($delete){
-    global $mysql;
-    $mysql->escape_string($delete);
-    $query = ("DELETE FROM linkTable where short='$delete'");
-    $mysql->query($query);
-}
-
-/**
     @param String $delete
         This is the short to be used as a key to delete an entire entry from the database
 */
@@ -166,92 +260,31 @@ function showEditBox(){
 }
 
 /**
-    Prints existing shortened links to the main console
+    @param String $delete
+        This is the short to be used as a key to delete an entire entry from the database
 */
-// TODO Other sorting and filtering options
-function printLinks(){
+function deleteThis($delete){
     global $mysql;
-    // Prints by shorts in alphabetical order
-    $query = "SELECT link, short FROM linkTable ORDER BY short";
-    $result = $mysql->query($query);
-    while ($row = $result->fetch_assoc()){
-        // Clicking on full link will take you to the destination in a new tab
-        echo "<div><a href='${row['link']}' target='_blank'>${row['link']}</a></div>";
-        $withQuotes = "'${row['short']}'";
-        // Clicking on the short will open a prompt with the text highlighted
-        // TODO Automatic copy to clipboard on click with fallback methods
-        echo "<div><span onclick=\"popup($withQuotes)\">${row['short']}</span><img src='edit.svg' onclick=\"edit('${row['short']}')\"></div>";
-    }
+    $mysql->escape_string($delete);
+    $query = ("DELETE FROM linkTable where short='$delete'");
+    $mysql->query($query);
 }
 
 /**
-    The main code
+    @param String $oldShort
+        Preserved old short to be used as key
+
+    @param array $ogs
+        Contains key/data pairs for og:title, image, and description
 */
-// After a form submit for a new link
-if (isset($_POST["link"])){
-    $link = $_POST["link"];
-    $short = $_POST["short"];
-    // Add video to database with scraped og - if failed, return false
-    if (!addVideoToShorthand($short, $link)){
-        $_SESSION["flash"] = "Short already exists. Not replacing with new one.";
-    }
-    $_POST = array();
-}
-
-// After a form submit to delete a preexisting link
-if (isset($_POST["delete"])){
-    deleteThis($_POST["delete"]);
-    $_POST = array();
-}
-
-if (isset($_SESSION['flash'])){
-    echo "<div id='flash'><h2>${_SESSION['flash']}</h2><h3>Click to dismiss</h3></div>";
-    unset($_SESSION['flash']);
-}
-
-if (isset($_POST["editRequest"])){
-    showEditBox();
-    $_POST = array();
-}
-
-if (isset($_POST["newTitle"])){
-    $ogs = array(
-        "title" => $_POST["newTitle"],
-        "image" => $_POST["newImage"],
-        "description" => $_POST["newDescription"],
-    );
-    $oldShort = $_POST["oldShort"];
-    $newShort = $_POST["newShort"];
-    $newLink = $_POST["newLink"];
-    updateDBEntry($oldShort, $ogs, $newShort, $newLink);
-    $_POST = array();
+function updateDBEntry($oldShort, $ogs, $short, $link){
+    global $mysql;
+    $title = $mysql->escape_string($ogs["title"]);
+    $image = $mysql->escape_string($ogs["image"]);
+    $description = $mysql->escape_string($ogs["description"]);
+    $short = $mysql->escape_string($short);
+    $link = $mysql->escape_string($link);
+    $query = "UPDATE linkTable SET title='$title', image='$image', description='$description', short='$short', link='$link' WHERE short='$oldShort'";
+    $mysql->query($query);
 }
 ?>
-
-<!DOCTYPE html>
-<html>
-
-<head>
-    <link rel="stylesheet" href="ui.css">
-    <script src="script.js"></script>
-</head>
-
-<body>
-    <div class="container">
-        <h1>Shortened Links</h1>
-        <form method="post" id="createForm">
-            <input type="text" name="link" placeholder="full link">
-            <input class="right" type="text" name="short" placeholder="abbreviation">
-            <input type="submit"> </form>
-        <div class="links">
-            <?php printLinks(); ?>
-        </div>
-        <form method="post" id="deleteForm">
-            <input type="hidden" name="delete" id="delete"> 
-            <input type="submit"> </form>
-        <form method="post" id="editForm" class="hidden">
-            <input type="text" name="editRequest" id="editField"> </form>
-    </div>
-</body>
-
-</html>
