@@ -218,15 +218,15 @@ function showEditBox(){
                     <h2>Image Link</h2>
                     <input type='text' name='newImage' value='$editImage'>
                     <h2>Description</h2>
-                    <textarea rows='3' name='newDescription'>$editDescription</textarea>
+                    <textarea rows='5' name='newDescription'>$editDescription</textarea>
                     <input type='hidden' name='oldShort' value='$short'>
                     <h2>Short</h2>
                     <input type='text' name='newShort' value='$editShort'>
                     <h2>Full Link</h2>
                     <input type='text' name='newLink' value='$editLink'>
                     <input type='submit' value='submit'> </form>
-                <button onclick=\"deleteItem('$short')\">Delete</button>
-                <button onclick='cancel()'>Cancel</button>
+                <button onclick=\"deleteItem('$short')\" id='delete-button'>Delete</button>
+                <button onclick='cancel()' id='cancel-button'>Cancel</button>
                 <button onclick='submit()'>Submit</button>
             </div>
         </div>
