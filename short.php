@@ -2,16 +2,26 @@
 require 'serverconnect.php';
 
 /**
-    @return String
+    @return String IF success
         The video ID of a YouTube video
+    @return boolean IF fail
+        Indicates that the hostname is neither youtube.com nor youtu.be
 */
 function parseVideoIdFromLink($link){
-    $linkParsed = parse_url($link, PHP_URL_QUERY);
-    $arr = explode("v=", $linkParsed);
-    if ($arr[1] !== NULL){
-        return $arr[1];
+    if (parse_url($link, PHP_URL_HOST) === 'www.youtube.com'){
+        $linkParsed = parse_url($link, PHP_URL_QUERY);
+        $arr = explode("v=", $linkParsed);
+        if ($arr[1] !== NULL){
+            return $arr[1];
+        }
     }
-    return false;
+    else if (parse_url($link, PHP_URL_HOST) === 'youtu.be'){
+        $linkParsed = parse_url($link, PHP_URL_PATH);
+        return ltrim($linkParsed, "/");
+    }
+    else{
+        return false;
+    }
 }
 
 /**
@@ -32,9 +42,11 @@ if (!$result->num_rows == 0){
     
     // If it is a YouTube link, we create an og:video tag so Facebook can embed the player
     $isYouTubeVideo = false;
-    if (parseVideoIdFromLink($link) !== false){
-        $videoId = parseVideoIdFromLink($link);
+    if (parse_url($link, PHP_URL_HOST) === 'www.youtube.com' || parse_url($link, PHP_URL_HOST) === 'youtu.be'){
         $isYouTubeVideo = true;
+    }
+    if ($isYouTubeVideo){
+        $videoId = parseVideoIdFromLink($link);
     }
     echo "<!DOCTYPE html><html>";
     

@@ -5,7 +5,6 @@ This link shortener is intended to be installed on a server with a database. Whe
 ## Upcoming Features
 * Easier method of copying newly generated short link
 * Package management with composer
-* Parse youtu.be links the same way as a normal YouTube link
 * Additional sorting and filtering options for main list
 * Parse non YouTube videos the same way a YouTube video is
 
