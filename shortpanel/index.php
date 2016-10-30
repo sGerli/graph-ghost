@@ -112,15 +112,16 @@ function doEditBoxSubmission(){
 function printLinks(){
     global $mysql;
     // Prints by shorts in alphabetical order
-    $query = "SELECT link, short FROM linkTable ORDER BY short";
-    $result = $mysql->query($query);
-    while ($row = $result->fetch_assoc()){
+    $query = $mysql->prepare("SELECT link, short FROM linkTable ORDER BY short");
+    $query->execute();
+    $query->bind_result($link, $short);
+    while ($query->fetch()){
         // Clicking on full link will take you to the destination in a new tab
-        echo "<div><a href='${row['link']}' target='_blank'>${row['link']}</a></div>";
-        $withQuotes = "'${row['short']}'";
-        // Clicking on the short will open a prompt with the text highlighted
-        echo "<div><span onclick=\"popup($withQuotes)\">${row['short']}</span><img src='edit.svg' onclick=\"edit('${row['short']}')\"></div>";
+        echo "<div><a href='$link' target='_blank'>$link</a></div>";
+        $withQuotes = "'$short'";
+        echo "<div><span onclick=\"popup($withQuotes)\">$short</span><img src='edit.svg' onclick=\"edit('$short')\"></div>";
     }
+    $query->close();
 }
 
 /**
@@ -196,15 +197,14 @@ function cleanScrapeData($scrapeData, $link){
 */
 function insertToDB($scrapeData, $short, $link){
     global $mysql;
-//    $query = "SELECT short FROM linkTable WHERE short='$short'";
-//    $result = $mysql->query($query)->fetch_assoc();
     $query = $mysql->prepare("SELECT short FROM linkTable WHERE short=?");
     $query->bind_param('s', $short);
     $query->execute();
     $query->bind_result($result);
+    $query->fetch();
     $query->close();
     // If the short already exists in the database
-    if ($result !== " "){
+    if ($result !== NULL){
         return false;
     }
     else{
@@ -219,24 +219,15 @@ function insertToDB($scrapeData, $short, $link){
     }
 }
 
-/**
-    @param String $delete
-        This is the short to be used as a key to delete an entire entry from the database
-*/
 function showEditBox(){
     global $mysql;
     $short = $_POST["editRequest"];
-//    $query = "SELECT * FROM linkTable WHERE short = '$short'";
     $query = $mysql->prepare("SELECT * FROM linkTable WHERE short=?");
     $query->bind_param('s', $short);
     $query->execute();
+    $query->bind_result($editTitle, $editImage, $editDescription, $editShort, $editLink);
+    $query->fetch();
     $query->close();
-    $result = $mysql->query($query)->fetch_assoc();
-    $editTitle = $result["title"];
-    $editImage = $result["image"];
-    $editDescription = $result["description"];
-    $editShort = $result["short"];
-    $editLink = $result["link"];
     echo "
         <div class='edit-box' id='edit-container'>
             <div class='container'>

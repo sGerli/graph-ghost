@@ -29,21 +29,14 @@ function parseVideoIdFromLink($link){
         RewriteRule ^(.*)$ /short.php?val=$1
     val is used as the main key for matching to full link and data in database
 */
-$short = $mysql->escape_string($_GET["val"]);
-
-//$query = "SELECT title, image, description, link FROM linkTable WHERE short='$short'";
+$short = $_GET["val"];
 $query = $mysql->prepare("SELECT title, image, description, link FROM linkTable WHERE short=?");
 $query->bind_param('s', $short);
 $query->execute();
+$query->bind_result($title, $image, $description, $link);
+$query->fetch();
 $query->close();
-$result = $mysql->query($query);
-if (!$result->num_rows == 0){
-    $row = $result->fetch_assoc();
-    $title = htmlspecialchars($row['title'], ENT_QUOTES);
-    $image = htmlspecialchars($row['image'], ENT_QUOTES);
-    $description = htmlspecialchars($row['description'], ENT_QUOTES);
-    $link = htmlspecialchars($row['link'], ENT_QUOTES);
-    
+if ($title !== " "){
     // If it is a YouTube link, we create an og:video tag so Facebook can embed the player
     $isYouTubeVideo = false;
     if (parse_url($link, PHP_URL_HOST) === 'www.youtube.com' || parse_url($link, PHP_URL_HOST) === 'youtu.be'){
