@@ -49,8 +49,8 @@ function doLinkCreation(){
     if (isset($_POST["link"])){
         $link = $_POST["link"];
         $short = $_POST["short"];
-        // Add video to database with scraped og - if failed, return false
-        if (!addVideoToShorthand($short, $link)){
+        // Add data to database with scraped og - if failed, return false
+        if (!addDataToShorthand($short, $link)){
             $_SESSION["flash"] = "Short already exists. Not replacing with new one.";
         }
         $_POST = array();
@@ -135,7 +135,7 @@ function printLinks(){
     @return boolean
         False on failed database entry
 */
-function addVideoToShorthand($short, $link){
+function addDataToShorthand($short, $link){
     $scrapeData = scrapeLink($link);
     // This scraper returns og:tag instead of tag so we have to clean it
     $scrapeData = cleanScrapeData($scrapeData, $link);
@@ -203,20 +203,13 @@ function insertToDB($scrapeData, $short, $link){
         return false;
     }
     else{
-        $title = $mysql->escape_string($scrapeData["title"]);
-        $image = $mysql->escape_string($scrapeData["image"]);
-        $description = $mysql->escape_string($scrapeData["description"]);
-        $short = $mysql->escape_string($short);
-        $link = $mysql->escape_string($link);
-        $query = "INSERT INTO linkTable 
-            VALUES (
-                '$title',
-                '$image',
-                '$description',
-                '$short',
-                '$link'
-            )";
-        $mysql->query($query);
+        $title = $scrapeData["title"];
+        $image = $scrapeData["image"];
+        $description = $scrapeData["description"];
+        $query = $mysql->prepare("INSERT INTO linkTable VALUES (?, ?, ?, ?, ?)");
+        $query->bind_param('sssss', $title, $image, $description, $short, $link);
+        $query->execute();
+        $query->close();
         return true;
     }
 }
@@ -265,9 +258,10 @@ function showEditBox(){
 */
 function deleteThis($delete){
     global $mysql;
-    $mysql->escape_string($delete);
-    $query = ("DELETE FROM linkTable where short='$delete'");
-    $mysql->query($query);
+    $query = $mysql->prepare("DELETE FROM linkTable WHERE short=?");
+    $query->bind_param('s', $delete);
+    $query->execute();
+    $query->close();
 }
 
 /**
@@ -279,12 +273,12 @@ function deleteThis($delete){
 */
 function updateDBEntry($oldShort, $ogs, $short, $link){
     global $mysql;
-    $title = $mysql->escape_string($ogs["title"]);
-    $image = $mysql->escape_string($ogs["image"]);
-    $description = $mysql->escape_string($ogs["description"]);
-    $short = $mysql->escape_string($short);
-    $link = $mysql->escape_string($link);
-    $query = "UPDATE linkTable SET title='$title', image='$image', description='$description', short='$short', link='$link' WHERE short='$oldShort'";
-    $mysql->query($query);
+    $title = $ogs["title"];
+    $image = $ogs["image"];
+    $description = $ogs["description"];
+    $query = $mysql->prepare("UPDATE linkTable SET title=?, image=?, description=?, short=?, link=? WHERE short=?");
+    $query->bind_param('ssssss', $title, $image, $description, $short, $link, $oldShort);
+    $query->execute();
+    $query->close();
 }
 ?>
