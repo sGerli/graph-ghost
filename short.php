@@ -31,7 +31,11 @@ function parseVideoIdFromLink($link){
 */
 $short = $mysql->escape_string($_GET["val"]);
 
-$query = "SELECT title, image, description, link FROM linkTable WHERE short='$short'";
+//$query = "SELECT title, image, description, link FROM linkTable WHERE short='$short'";
+$query = $mysql->prepare("SELECT title, image, description, link FROM linkTable WHERE short=?");
+$query->bind_param('s', $short);
+$query->execute();
+$query->close();
 $result = $mysql->query($query);
 if (!$result->num_rows == 0){
     $row = $result->fetch_assoc();

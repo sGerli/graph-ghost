@@ -196,10 +196,15 @@ function cleanScrapeData($scrapeData, $link){
 */
 function insertToDB($scrapeData, $short, $link){
     global $mysql;
-    $query = "SELECT short FROM linkTable WHERE short='$short'";
-    $result = $mysql->query($query)->fetch_assoc();
+//    $query = "SELECT short FROM linkTable WHERE short='$short'";
+//    $result = $mysql->query($query)->fetch_assoc();
+    $query = $mysql->prepare("SELECT short FROM linkTable WHERE short=?");
+    $query->bind_param('s', $short);
+    $query->execute();
+    $query->bind_result($result);
+    $query->close();
     // If the short already exists in the database
-    if ($result !== NULL){
+    if ($result !== " "){
         return false;
     }
     else{
@@ -221,7 +226,11 @@ function insertToDB($scrapeData, $short, $link){
 function showEditBox(){
     global $mysql;
     $short = $_POST["editRequest"];
-    $query = "SELECT * FROM linkTable WHERE short = '$short'";
+//    $query = "SELECT * FROM linkTable WHERE short = '$short'";
+    $query = $mysql->prepare("SELECT * FROM linkTable WHERE short=?");
+    $query->bind_param('s', $short);
+    $query->execute();
+    $query->close();
     $result = $mysql->query($query)->fetch_assoc();
     $editTitle = $result["title"];
     $editImage = $result["image"];
