@@ -36,7 +36,7 @@ $query->execute();
 $query->bind_result($title, $image, $description, $link);
 $query->fetch();
 $query->close();
-if ($title !== " "){
+if ($title !== NULL){
     // If it is a YouTube link, we create an og:video tag so Facebook can embed the player
     $isYouTubeVideo = false;
     if (parse_url($link, PHP_URL_HOST) === 'www.youtube.com' || parse_url($link, PHP_URL_HOST) === 'youtu.be'){
