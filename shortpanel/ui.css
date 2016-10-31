@@ -104,7 +104,7 @@ a:hover {
 
 /*Full link*/
 
-.links div:nth-child(odd) {
+.links > div:nth-child(odd) {
     width: 70%;
     white-space: nowrap;
     overflow: hidden;
@@ -114,14 +114,14 @@ a:hover {
 
 /*Short link*/
 
-.links div:nth-child(even) {
+.links > div:nth-child(even) {
     width: 30%;
     text-align: right;
-    text-decoration: underline;
     transition: all 0.5s;
+    text-decoration: underline;
 }
 
-.links div:nth-child(even):hover {
+.links > div:nth-child(even):hover {
     opacity: 0.8;
     cursor: pointer;
 }
@@ -217,4 +217,41 @@ button:hover{
 
 #cancel-button{
     margin: 0 5%;
+}
+
+.link:hover > .card{
+    display: block;
+    position: fixed;
+    left: 50vw;
+    width: 400px;
+}
+
+.card{
+    display: none;
+    background: #fff;
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
+.card img{
+    width: 100%;
+    padding: 0;
+}
+
+.card-text{
+    width: 100%;
+    padding: 0 1em 1em;
+}
+
+.card h1{
+    overflow: hidden;
+    text-align: left;
+    font-size: 24px;
+    margin: 0;
+    text-overflow: ellipsis;
+}
+.card p{
+    overflow: hidden;
+    padding-top: 4px;
+    font-size: 16px;
+    text-overflow: ellipsis;
 }

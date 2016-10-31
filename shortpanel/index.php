@@ -112,12 +112,23 @@ function doEditBoxSubmission(){
 function printLinks(){
     global $mysql;
     // Prints by shorts in alphabetical order
-    $query = $mysql->prepare("SELECT link, short FROM linkTable ORDER BY short");
+    $query = $mysql->prepare("SELECT title, image, description, short, link FROM linkTable ORDER BY short");
     $query->execute();
-    $query->bind_result($link, $short);
+    $query->bind_result($title, $image, $description, $short, $link);
     while ($query->fetch()){
         // Clicking on full link will take you to the destination in a new tab
-        echo "<div><a href='$link' target='_blank'>$link</a></div>";
+        echo "
+            <div class='link'>
+                <div class='card'>
+                    <img src='$image'>
+                    <div class='card-text'>
+                        <h1>$title</h1>
+                        <p>$description</p>
+                    </div>
+                </div>
+                <a href='$link' target='_blank'>$link</a>
+            </div>
+        ";
         $withQuotes = "'$short'";
         echo "<div><span onclick=\"popup($withQuotes)\">$short</span><img src='edit.svg' onclick=\"edit('$short')\"></div>";
     }
