@@ -38,18 +38,25 @@ function cancel() {
 function submit() {
     document.getElementById("newData").submit()
 }
-
 $(document).ready(function () {
-    $.ajax({
-        dataType: 'json',
-        type: "GET",
-        url: "api/all.php",
-        success: function (links) {
-            for (var i in links){
-                var link = links[i]
-                var content = "<div class='link'><div class='card'> <img src='" + link.image + "'><div class='card-text'><h1>" + link.title + "</h1><p>" + link.description + "</p></div></div><a href='" + link.link + "' target='_blank'>" + link.link + "</a></div>" + "<div><span onclick=\"popup('" + link.short + "')\">" + link.short + "</span><img src='edit.svg' onclick=\"edit('" + link.short + "')\"></div>"
-                $(".links").append(content)
-            }
-        }
-    })
+    printLinks()
 })
+
+function printLinks() {
+    $.get("api/get.php", function (links) {
+        for (var i in links) {
+            var link = links[i]
+            var content = "<div class='link'><div class='card'> <img src='" + link.image + "'><div class='card-text'><h1>" + link.title + "</h1><p>" + link.description + "</p></div></div><a href='" + link.link + "' target='_blank'>" + link.link + "</a></div>" + "<div><span onclick=\"popup('" + link.short + "')\">" + link.short + "</span><img src='edit.svg' onclick=\"edit('" + link.short + "')\"></div>"
+            $(".links").append(content)
+        }
+    }, "json")
+}
+
+function getDataEntry(short) {
+    $.get("api/get.php", {
+        id: short
+    }, function (link) {
+        console.log(link)
+        return link
+    }, "json")
+}
