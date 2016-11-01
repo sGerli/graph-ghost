@@ -18,6 +18,10 @@ doEditBoxSubmission();
 
 <head>
     <link rel="stylesheet" href="ui.css">
+    <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
     <script src="script.js"></script>
 </head>
 
@@ -29,7 +33,7 @@ doEditBoxSubmission();
             <input class="right" type="text" name="short" placeholder="abbreviation">
             <input type="submit"> </form>
         <div class="links">
-            <?php printLinks(); ?>
+            <?php //printLinks(); ?>
         </div>
         <form method="post" id="deleteForm">
             <input type="hidden" name="delete" id="delete"> 
@@ -103,36 +107,6 @@ function doEditBoxSubmission(){
         updateDBEntry($oldShort, $ogs, $newShort, $newLink);
         $_POST = array();
     }
-}
-
-/**
-    Prints existing shortened links to the main console
-*/
-// TODO Other sorting and filtering options
-function printLinks(){
-    global $mysql;
-    // Prints by shorts in alphabetical order
-    $query = $mysql->prepare("SELECT title, image, description, short, link FROM linkTable ORDER BY short");
-    $query->execute();
-    $query->bind_result($title, $image, $description, $short, $link);
-    while ($query->fetch()){
-        // Clicking on full link will take you to the destination in a new tab
-        echo "
-            <div class='link'>
-                <div class='card'>
-                    <img src='$image'>
-                    <div class='card-text'>
-                        <h1>$title</h1>
-                        <p>$description</p>
-                    </div>
-                </div>
-                <a href='$link' target='_blank'>$link</a>
-            </div>
-        ";
-        $withQuotes = "'$short'";
-        echo "<div><span onclick=\"popup($withQuotes)\">$short</span><img src='edit.svg' onclick=\"edit('$short')\"></div>";
-    }
-    $query->close();
 }
 
 /**
