@@ -33,7 +33,7 @@ doEditBoxSubmission();
             <input class="right" type="text" name="short" placeholder="abbreviation">
             <input type="submit"> </form>
         <div class="links">
-            <?php //printLinks(); ?>
+            
         </div>
         <form method="post" id="deleteForm">
             <input type="hidden" name="delete" id="delete"> 
@@ -157,20 +157,25 @@ function scrapeLink($link){
         An array containing the relevant og data
 */
 function cleanScrapeData($scrapeData, $link){
-    $newScrapeData = array(
-        "title" => $scrapeData["og:title"],
-        "image" => $scrapeData["og:image"],
-        "description" => $scrapeData["og:description"],
-    );
+    if (sizeof($scrapeData) > 0){
+        $newScrapeData = array(
+            "title" => $scrapeData["og:title"],
+            "image" => $scrapeData["og:image"],
+            "description" => $scrapeData["og:description"],
+        );
 
-    // og:image is often a relative link
-    // If link does not start with http, it is relative
-    if (substr($newScrapeData["image"], 0, 4) !== "http"){
-        $link = rtrim($link, "/");
-        // Append relative link to absolute link to get full url
-        $newScrapeData["image"] = $link . $newScrapeData["image"];
+        // og:image is often a relative link
+        // If link does not start with http, it is relative
+        if (substr($newScrapeData["image"], 0, 4) !== "http"){
+            $link = rtrim($link, "/");
+            // Append relative link to absolute link to get full url
+            $newScrapeData["image"] = $link . $newScrapeData["image"];
+        }
+        return $newScrapeData;
     }
-    return $newScrapeData;
+    else{
+        return false;
+    }
 }
 
 /**
@@ -193,9 +198,16 @@ function insertToDB($scrapeData, $short, $link){
         return false;
     }
     else{
-        $title = $scrapeData["title"];
-        $image = $scrapeData["image"];
-        $description = $scrapeData["description"];
+        if ($scrapeData === false){
+            $title = " ";
+            $image = " ";
+            $description = " ";
+        }
+        else{
+            $title = $scrapeData["title"];
+            $image = $scrapeData["image"];
+            $description = $scrapeData["description"];
+        }
         $query = $mysql->prepare("INSERT INTO linkTable VALUES (?, ?, ?, ?, ?)");
         $query->bind_param('sssss', $title, $image, $description, $short, $link);
         $query->execute();

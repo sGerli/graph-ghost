@@ -11,7 +11,7 @@ function parseVideoIdFromLink($link){
     if (parse_url($link, PHP_URL_HOST) === 'www.youtube.com'){
         $linkParsed = parse_url($link, PHP_URL_QUERY);
         $arr = explode("v=", $linkParsed);
-        if ($arr[1] !== NULL){
+        if (isset($arr[1]) && $arr[1] !== NULL){
             return $arr[1];
         }
     }

@@ -2,8 +2,8 @@
 require '../../serverconnect.php';
 global $mysql;
 
-if (isset($_REQUEST["id"])){
-    $id = $_REQUEST["id"];
+if (isset($_REQUEST["q"])){
+    $id = $_REQUEST["q"];
     $query = $mysql->prepare("SELECT * FROM linkTable WHERE short=?");
     $query->bind_param('s', $id);
     $query->execute();
