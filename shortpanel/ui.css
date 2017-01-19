@@ -117,13 +117,22 @@ a:hover {
 .links > div:nth-child(even) {
     width: 30%;
     text-align: right;
-    transition: all 0.5s;
-    text-decoration: underline;
 }
 
-.links > div:nth-child(even):hover {
+.links > div:nth-child(even) > span:nth-child(odd) {
+    text-decoration: underline;
+    transition: all 0.5s;
+}
+
+.links > div:nth-child(even) > span:nth-child(odd):hover {
     opacity: 0.8;
     cursor: pointer;
+}
+
+.click-count{
+    padding-left: 1em;
+    text-align: right;
+    text-decoration: none;
 }
 
 img{

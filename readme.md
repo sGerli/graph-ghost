@@ -36,5 +36,6 @@ This allows quick and easy GUI based method of creating redirect links/short lin
 
 ## Known Bugs
 * Currently does not provide image or video height/width so Facebook cannot asyncronously download a preview
+* Attempting to update the click count causes the link fetching to not work
 * Code contains spaghetti but no sauce
 * https://en.wikipedia.org/wiki/Category:Lists_of_insects
