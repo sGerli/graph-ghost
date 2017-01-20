@@ -37,8 +37,7 @@ $query->bind_result($title, $image, $description, $link);
 $query->fetch();
 $query->close();
 
-// Increase clicks col by 1 to count link traffic
-$query->$mysql->prepare("UPDATE linkTable SET clicks = clicks + 1 WHERE short=?");
+$query=$mysql->prepare("UPDATE linkTable SET clicks = clicks + 1 WHERE short=?");
 $query->bind_param('s', $short);
 $query->execute();
 $query->close();
