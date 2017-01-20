@@ -208,7 +208,7 @@ function insertToDB($scrapeData, $short, $link){
             $image = $scrapeData["image"];
             $description = $scrapeData["description"];
         }
-        $query = $mysql->prepare("INSERT INTO linkTable VALUES (?, ?, ?, ?, ?)");
+        $query = $mysql->prepare("INSERT INTO linkTable (title, image, description, short, link) VALUES (?, ?, ?, ?, ?)");
         $query->bind_param('sssss', $title, $image, $description, $short, $link);
         $query->execute();
         $query->close();
@@ -219,7 +219,7 @@ function insertToDB($scrapeData, $short, $link){
 function showEditBox(){
     global $mysql;
     $short = $_POST["editRequest"];
-    $query = $mysql->prepare("SELECT * FROM linkTable WHERE short=?");
+    $query = $mysql->prepare("SELECT title, image, description, short, link FROM linkTable WHERE short=?");
     $query->bind_param('s', $short);
     $query->execute();
     $query->bind_result($editTitle, $editImage, $editDescription, $editShort, $editLink);

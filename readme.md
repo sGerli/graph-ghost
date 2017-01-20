@@ -3,14 +3,14 @@
 1. Copy the files to your server's root directory
 2. Ensure that your server config allows the use of .htaccess
 3. Create a MySQL table named `linkTable`
-4. Create table columns with names `title`, `image`, `description`, `short`, and `link` as demonstrated below
+4. Create table columns with names `title`, `image`, `description`, `short`, `link`, and `clicks` as demonstrated below
 5. Create a file in the root directory named `serverconnect.php`
 6. It should create a MySQL connection named `$mysql` with appropriate login. The following is an appropriate example
 
 #### MySQL Table Named linkTable
-|title|image|description|short|link|
-|---|---|---|---|---|
-|Main title|full url to image|Description|example.com/short|full url|
+|title|image|description|short|link|clicks|
+|---|---|---|---|---|---|
+|Main title|full url to image|Description|example.com/short|full url|Click counter|
 
 #### PHP file named serverconnect.php
 ```php
@@ -30,7 +30,6 @@ This allows quick and easy GUI based method of creating redirect links/short lin
 
 ## Upcoming Features
 * Easier method of copying newly generated short link
-* Package management with composer
 * Additional sorting and filtering options for main list
 * Parse non YouTube videos the same way a YouTube video is
 
