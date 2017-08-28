@@ -1,1 +1,4 @@
-video
+composer.lock
+composer.phar
+/vendor
+/.idea

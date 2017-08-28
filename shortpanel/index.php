@@ -17,12 +17,12 @@ doEditBoxSubmission();
 <html>
 
 <head>
-    <link rel="stylesheet" href="ui.css">
+    <link rel="stylesheet" href="../css/shortpanel.css">
     <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
   crossorigin="anonymous"></script>
-    <script src="script.js"></script>
+    <script src="../scripts/shortpanel.js"></script>
 </head>
 
 <body>
