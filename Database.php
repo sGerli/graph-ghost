@@ -1,6 +1,8 @@
 <?php
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/secret.php");
+// Connects to MySQL Database and creates $mysql object
+require 'serverconnect.php';
+
 class Database
 {
     public function __construct() {
