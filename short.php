@@ -9,7 +9,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php");
  * val is used as the main key for matching to full link and data in database
  */
 $db = new Database();
-$short = substr($_GET["val"], 1);
+$short = $_GET["val"];
 $data = $db->selectShortLink($short);
 $db->updateClicks($short);
 
