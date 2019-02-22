@@ -187,7 +187,7 @@ function cleanScrapeData($scrapeData, $link){
 */
 function insertToDB($scrapeData, $short, $link){
     global $mysql;
-    $query = $mysql->prepare("SELECT short FROM linkTable WHERE short=?");
+    $query = $mysql->prepare("SELECT short FROM short_links WHERE short=?");
     $query->bind_param('s', $short);
     $query->execute();
     $query->bind_result($result);
@@ -208,7 +208,7 @@ function insertToDB($scrapeData, $short, $link){
             $image = $scrapeData["image"];
             $description = $scrapeData["description"];
         }
-        $query = $mysql->prepare("INSERT INTO linkTable (title, image, description, short, link) VALUES (?, ?, ?, ?, ?)");
+        $query = $mysql->prepare("INSERT INTO short_links (title, image, description, short, link) VALUES (?, ?, ?, ?, ?)");
         $query->bind_param('sssss', $title, $image, $description, $short, $link);
         $query->execute();
         $query->close();
@@ -219,7 +219,7 @@ function insertToDB($scrapeData, $short, $link){
 function showEditBox(){
     global $mysql;
     $short = $_POST["editRequest"];
-    $query = $mysql->prepare("SELECT title, image, description, short, link FROM linkTable WHERE short=?");
+    $query = $mysql->prepare("SELECT title, image, description, short, link FROM short_links WHERE short=?");
     $query->bind_param('s', $short);
     $query->execute();
     $query->bind_result($editTitle, $editImage, $editDescription, $editShort, $editLink);
@@ -255,7 +255,7 @@ function showEditBox(){
 */
 function deleteThis($delete){
     global $mysql;
-    $query = $mysql->prepare("DELETE FROM linkTable WHERE short=?");
+    $query = $mysql->prepare("DELETE FROM short_links WHERE short=?");
     $query->bind_param('s', $delete);
     $query->execute();
     $query->close();
@@ -273,7 +273,7 @@ function updateDBEntry($oldShort, $ogs, $short, $link){
     $title = $ogs["title"];
     $image = $ogs["image"];
     $description = $ogs["description"];
-    $query = $mysql->prepare("UPDATE linkTable SET title=?, image=?, description=?, short=?, link=? WHERE short=?");
+    $query = $mysql->prepare("UPDATE short_links SET title=?, image=?, description=?, short=?, link=? WHERE short=?");
     $query->bind_param('ssssss', $title, $image, $description, $short, $link, $oldShort);
     $query->execute();
     $query->close();
