@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 {% if link %}
+<meta charset="utf-8">
 <meta property="og:title" content="{{title}}">
 <meta property="og:url" content="{{url}}">
-<meta property="og:image" content={{image}}>
-<meta property="og:description" content={{description}}>
+<meta property="og:image" content="{{image}}">
+<meta property="og:description" content="{{description}}">
 <script>location = "{{link}}"</script>
 <noscript><a href="{{link}}">Click here to be redirected</a></noscript>
 {% else %}

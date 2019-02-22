@@ -82,7 +82,7 @@ class Database
         return [
             "title" => $title,
             "image" => $image,
-            "desc" =>$description,
+            "description" =>$description,
             "link" => $link
         ];
     }
@@ -100,7 +100,7 @@ class Database
             $data[] = [
                 "title" => $title,
                 "image" => $img,
-                "desc" => $desc,
+                "description" => $desc,
                 "short" => $short,
                 "link" => $link,
                 "clicks" => $clicks
