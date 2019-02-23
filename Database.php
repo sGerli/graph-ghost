@@ -10,7 +10,6 @@ class Database
             PASSWORD, DATABASE);
 
         if ($mysql->connect_error || !$mysql->select_db(DATABASE)) {
-            echo("Failed to connect to the database");
             $this->db = null;
         }
         else {
