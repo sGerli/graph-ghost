@@ -1,13 +1,11 @@
 <?php
 
-// Connects to MySQL Database and creates $mysql object
-require("serverconnect.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/secret.php");
 
 class Database
 {
     public function __construct() {
-        $mysql = new mysqli(SERVERNAME, USERNAME,
-            PASSWORD, DATABASE);
+        $mysql = new mysqli(SERVERNAME, USERNAME, PASSWORD, DATABASE);
 
         if ($mysql->connect_error || !$mysql->select_db(DATABASE)) {
             $this->db = null;

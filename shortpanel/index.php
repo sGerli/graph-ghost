@@ -1,10 +1,17 @@
 <?php
+use Cartalyst\Sentinel\Native\Facades\Sentinel;
 require("includes/shortpanel.php");
+require_once("includes/authentication.php");
 
-$panel = new ShortPanel();
+if ($user = Sentinel::check()) {
+    $panel = new ShortPanel();
+    $panel->get_links();
+} else {
+    header("Location: login.php");
+}
 
 // IF a link is created THEN
-doLinkCreation();
+//doLinkCreation();
 
 // IF a link is deleted THEN
 /*doLinkDeletion();
@@ -15,7 +22,7 @@ doEditBoxCreation();
 // IF an edit is submitted THEN
 doEditBoxSubmission();*/
 
-$panel->get_links();
+
 
 /**
     After a form submit for a new link
