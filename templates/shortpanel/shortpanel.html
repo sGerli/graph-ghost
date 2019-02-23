@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/css/reset.css">
+<link rel="stylesheet" href="/css/shortpanel.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Shortened Links</h1>
+    <!-- Add Link -->
+    <form method="POST">
+        <input type="hidden" name="method" value="add">
+        <input type="text" name="link" placeholder="full link">
+        <input class="right" type="text" name="short" placeholder="short alias">
+        <input type="submit">
+    </form>
+
+    <div class="links">
+        {% for link in links %}
+        <div class="link">
+            <div class="full"><a href="{{ link.link }}" target="_blank">{{ link.link }}</a></div>
+            <div class="short" onclick="popup('{{ link.short }}')">{{ link.short }}</div>
+            <div class="clicks">{{ link.clicks }}</div>
+            <div class="edit-button"><img src="/img/edit.svg" onclick="edit('{{ link.short }}')"></div>
+        </div>
+        <div class="card">
+            <img src=" {{ link.image }}">
+            <div class="card-text">
+                <h1>{{ link.title}}</h1>
+                <p>{{ link.desc }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if edit %}
+    <div class="edit-box" id="edit-container">
+        <div class="container">
+            <form method="POST">
+                <input type="hidden" name="method" value="doEdit">
+
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" value="{{ edit.title }}">
+
+                <label for="image">Image</label>
+                <input type="text" name="image" id="image" value="{{ edit.image }}">
+
+                <label for="desc">Description</label>
+                <input type="text" name="desc" id="desc" value="{{ edit.desc }}">
+
+                <input type="hidden" name="oldShort" value="{{ edit.short }}">
+
+                <label for="newShort">Short</label>
+                <input type="text" name="newShort" id="newShort" value="{{ edit.short }}">
+
+                <label for="newLink">Full Link</label>
+                <input type="text" name="newLink" id="newLink" value="{{ edit.link }}">
+
+                <div class="buttons">
+                    <button type="button" onclick="deleteItem('{{ edit.short }}')">Delete</button>
+                    <button type="button" onclick="cancel()">Cancel</button>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Edit Request Form
+        This is submitted by Javascript with edit(short) is called -->
+    <form method="post" id="editForm" class="hidden">
+        <input type="hidden" name="method" value="showEdit">
+        <input type="hidden" name="short" id="editField">
+    </form>
+
+</div>
+{% if flash %}
+<script>alert("{{ flash }}")</script>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="/scripts/shortpanel.js"></script>
+{%endblock%}

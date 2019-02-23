@@ -53,10 +53,9 @@ class Database
             $title = $scrape["title"];
             $image = $scrape["image"];
             $description = $scrape["description"];
-            $query = $this->db->prepare("INSERT INTO short_links VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $pid = null;
+            $query = $this->db->prepare("INSERT INTO short_links VALUES (?, ?, ?, ?, ?, ?)");
             $clicks = 0;
-            $query->bind_param("isssssi", $pid, $title, $image, $description, $short, $link, $clicks);
+            $query->bind_param("sssssi", $title, $image, $description, $short, $link, $clicks);
 
             if (!$query || !$query->execute()) return false;
 
