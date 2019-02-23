@@ -1,5 +1,5 @@
 <?php
-require($_SERVER["DOCUMENT_ROOT"] . "/Database.php");
+require($_SERVER["DOCUMENT_ROOT"] . "/includes/database.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php");
 session_start();
 

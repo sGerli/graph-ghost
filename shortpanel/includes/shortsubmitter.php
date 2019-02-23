@@ -1,5 +1,5 @@
 <?php
-require($_SERVER["DOCUMENT_ROOT"] . "/Database.php");
+require($_SERVER["DOCUMENT_ROOT"] . "/includes/database.php");
 
 class ShortSubmitter
 {
