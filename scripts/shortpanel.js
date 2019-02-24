@@ -1,11 +1,11 @@
-$(document).ready(function () {
+/*$(document).ready(function () {
     printLinks()
-})
-document.addEventListener("DOMContentLoaded", function () {
+})*/
+/*document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("flash").addEventListener("click", function () {
         closeFlash()
     })
-})
+})*/
 
 function printFlash(message) {
     var flash = document.getElementById('flash')
@@ -44,7 +44,7 @@ function submit() {
     document.getElementById("newData").submit()
 }
 
-function printLinks() {
+/*function printLinks() {
     $.get("api/get.php", function (links) {
         for (var i in links) {
             var link = links[i]
@@ -52,4 +52,16 @@ function printLinks() {
             $(".links").append(content)
         }
     }, "json")
+}*/
+
+// NEW
+
+function deleteLink(short) {
+    document.getElementById("deleteModalShort").value = short
+    document.getElementById("deleteModal").style.display = "block"
+}
+
+function cancelDelete() {
+    document.getElementById("deleteModalShort").value = ""
+    document.getElementById("deleteModal").style.display = "none"
 }

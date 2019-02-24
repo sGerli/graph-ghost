@@ -18,25 +18,19 @@
     width: 5%;
 }
 
-.edit-box{
-    background: #222;
-    color: #eee;
-    box-shadow: 0 0 30px black;
-    width: 100%;
-    position: fixed;
-    padding: 1em;
-
-    z-index: 2;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
+.modal {
+    background-color: #dae1e794;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-.edit-box input, .edit-box textarea{
-    width: 100%;
-    margin-bottom: 1em;
+.modal-card {
+    top: 10%;
+    left: 10%;
+    right: 10%;
+    max-height: calc(100vh - 20%);
 }
 
 .link .card {
-    top: 36px;
+    top: 24px;
 }

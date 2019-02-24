@@ -21,7 +21,7 @@
     
     <!-- Add Link -->
     <form class="bg-white shadow-lg rounded p-4 mb-6" method="POST" action="redirect.php">
-        <input type="hidden" name="method" value="add">
+        <input type="hidden" name="method" value="addLink">
         <div class="flex flex-wrap">
             <div class="w-1/2 md:w-2/5 px-1 mb-6 md:mb-0">
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" name="link" placeholder="Full link">
@@ -44,8 +44,10 @@
             <div class="full truncate"><a href="{{ link.link }}" target="_blank">{{ link.link }}</a></div>
             <div class="short truncate" onclick="popup('{{ link.short }}')">{{ link.short }}</div>
             <div class="clicks">{{ link.clicks }}</div>
-            <div class="button"><img class="max-w-full max-h-20px" src="/img/edit.svg" onclick="edit('{{ link.short }}')"></div>
-            <div class="button"><img class="max-w-full max-h-20px" src="/img/trash.svg" onclick="edit('{{ link.short }}')"></div>
+            <div class="button"><img class="max-w-full max-h-20px cursor-pointer" src="/img/edit.svg" onclick="edit('{{ link.short }}')"></div>
+            <div class="button">
+                <img class="max-w-full max-h-20px cursor-pointer" src="/img/trash.svg" onclick="deleteLink('{{ link.short }}')">
+            </div>
             <div class="card bg-white sm:w-4/5 md:w-2/5 rounded overflow-hidden shadow-lg group-hover:block hidden absolute pin-r">
                 <img class="w-full" src=" {{ link.image }}">
                 <div class="px-6 py-4">
@@ -58,38 +60,87 @@
         {% endfor %}
     </div>
 
-    {% if edit %}
-    <div class="edit-box" id="edit-container">
-        <div class="container">
-            <form method="POST">
+    <div class="modal fixed pin w-screen h-screen hidden" id="edit-container">
+        <div class="modal-card bg-white shadow-lg rounded p-6 mb-6 w-4/5 overflow-auto absolute">
+            <form class="w-full" method="POST">
+                <div class="flex flex-wrap -mx-3 mb-8">
+                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="newLink">
+                        Title
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Example Title" name="newLink" id="newLink">
+                    </div>
+                    <div class="w-full md:w-1/2 px-3">
+                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="newShort">
+                        Thumbnail
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="https://example.com/thumb.png" name="image" id="image">
+                    </div>
+                </div>
+                <div class="flex flex-wrap -mx-3 mb-6">
+                    <div class="w-full px-3">
+                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="desc">
+                        Description
+                        </label>
+                        <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" name="desc" id="desc"></textarea>
+                    </div>
+                </div>
+                <div class="flex flex-wrap -mx-3 mb-6">
+                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="title">
+                        Full link
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="https://example.com" name="title" id="title">
+                    </div>
+                    <div class="w-full md:w-1/2 px-3">
+                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="newShort">
+                        Short alias
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="my-example" name="newShort" id="newShort">
+                    </div>
+                </div>
                 <input type="hidden" name="method" value="doEdit">
-
-                <label for="title">Title</label>
-                <input type="text" name="title" id="title" value="{{ edit.title }}">
-
-                <label for="image">Image</label>
-                <input type="text" name="image" id="image" value="{{ edit.image }}">
-
-                <label for="desc">Description</label>
-                <input type="text" name="desc" id="desc" value="{{ edit.desc }}">
 
                 <input type="hidden" name="oldShort" value="{{ edit.short }}">
 
-                <label for="newShort">Short</label>
-                <input type="text" name="newShort" id="newShort" value="{{ edit.short }}">
-
-                <label for="newLink">Full Link</label>
-                <input type="text" name="newLink" id="newLink" value="{{ edit.link }}">
-
-                <div class="buttons">
-                    <button type="button" onclick="deleteItem('{{ edit.short }}')">Delete</button>
-                    <button type="button" onclick="cancel()">Cancel</button>
-                    <button type="submit">Submit</button>
+                <div class="flex items-center justify-between">
+                    <button class="w-auto bg-grey-dark hover:bg-grey-darker text-grey-lightest font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"  onclick="cancel()" type="button">
+                        Cancel
+                    </button>
+                    <button class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Save
+                    </button>
                 </div>
             </form>
         </div>
     </div>
-    {% endif %}
+
+    <div class="modal fixed pin w-screen h-screen hidden" id="deleteModal">
+        <div class="modal-card bg-white shadow-lg rounded p-6 mb-6 w-4/5 overflow-auto absolute">
+            <form class="w-full" method="POST" action="redirect.php">
+                <input type="hidden" name="method" value="deleteLink">
+                <div class="font-bold text-xl mb-8">Are you sure you want to delete the link?</div>
+                <div class="md:flex md:items-center mb-6">
+                    <div class="w-auto">
+                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold md:text-right mb-1 md:mb-0 pr-4" for="deleteModalShort">
+                        Short alias
+                        </label>
+                    </div>
+                    <div class="w-full">
+                        <input class="bg-grey-lighter shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none" type="text"  name="short" value="" id="deleteModalShort" readonly>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button class="w-auto bg-grey-dark hover:bg-grey-darker text-grey-lightest font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"  onclick="cancelDelete()" type="button">
+                        Cancel
+                    </button>
+                    <button class="bg-red-dark hover:bg-red text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Edit Request Form
         This is submitted by Javascript with edit(short) is called -->
