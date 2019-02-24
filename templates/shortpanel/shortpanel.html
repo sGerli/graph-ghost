@@ -3,36 +3,47 @@
 {% block title %}Admin{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="/css/reset.css">
-<link rel="stylesheet" href="/css/shortpanel.css">
+
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Shortened Links</h1>
+<div class="container mx-auto px-4 py-10 w-4/5">
+    <h1 class="pin-l pb-6 w-auto">Shortened Links</h1>
     <!-- Add Link -->
-    <form method="POST" action="redirect.php">
+    <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4" method="POST" action="redirect.php">
         <input type="hidden" name="method" value="add">
-        <input type="text" name="link" placeholder="full link">
-        <input class="right" type="text" name="short" placeholder="short alias">
-        <input type="submit">
+        <div class="flex flex-wrap -mx-3">
+            <div class="w-1/2 md:w-2/5 px-3 mb-6 md:mb-0">
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" name="link" placeholder="Full link">
+            </div>
+            <div class="w-1/2 md:w-2/5 px-3">
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text"  name="short" placeholder="Short alias">
+            </div>
+            <div class="w-full md:w-1/5 px-3">
+                <button class="w-full bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Add
+                </button>
+            </div>
+            
+        </div>
     </form>
 
     <div class="links">
         {% for link in links %}
-        <div class="link">
+        <div class="link group relative">
             <div class="full"><a href="{{ link.link }}" target="_blank">{{ link.link }}</a></div>
             <div class="short" onclick="popup('{{ link.short }}')">{{ link.short }}</div>
             <div class="clicks">{{ link.clicks }}</div>
             <div class="edit-button"><img src="/img/edit.svg" onclick="edit('{{ link.short }}')"></div>
-        </div>
-        <div class="card">
-            <img src=" {{ link.image }}">
-            <div class="card-text">
-                <h1>{{ link.title}}</h1>
-                <p>{{ link.desc }}</p>
+            <div class="card bg-white sm:w-4/5 md:w-2/5 rounded overflow-hidden shadow-lg group-hover:block hidden absolute pin-r">
+                <img class="w-full" src=" {{ link.image }}">
+                <div class="px-6 py-4">
+                    <div class="font-bold text-xl mb-2">{{ link.title}}</div>
+                    <p  class="text-grey-darker text-base">{{ link.description }}</p>
+                </div>
             </div>
         </div>
+        
         {% endfor %}
     </div>
 

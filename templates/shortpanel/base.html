@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/css/style.css">
+        <title>{% block title %}{% endblock %} - Open Graph Shell</title>
         {% block head %}
-            <title>{% block title %}{% endblock %} - Open Graph Shell</title>
         {% endblock %}
     </head>
-    <body>
+    <body class="bg-grey-lightest">
         <div id="content">{% block content %}{% endblock %}</div>
     </body>
 </html>
