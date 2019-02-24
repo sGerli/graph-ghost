@@ -1,0 +1,57 @@
+ @tailwind preflight;
+ @tailwind components;
+ @tailwind utilities;
+
+.link {
+    display: flex;
+    padding: 7px;
+}
+
+.full, .short {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.full {
+    width: 60%;
+}
+
+.short {
+    width: 30%;
+}
+
+.clicks {
+    width: 5%;
+}
+
+.edit-button {
+    width: 5%;
+}
+
+.hidden {
+    display: none;
+}
+
+.edit-box{
+    background: #222;
+    color: #eee;
+    box-shadow: 0 0 30px black;
+    width: 100%;
+    position: fixed;
+    padding: 1em;
+
+    z-index: 2;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.edit-box input, .edit-box textarea{
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.link .card {
+    top: 36px;
+}

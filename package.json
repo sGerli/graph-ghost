@@ -1,0 +1,7 @@
+{
+  "name": "open-graph-shell",
+  "version": "1.0.0",
+  "devDependencies": {
+    "tailwindcss": "^0.7.4"
+  }
+}
