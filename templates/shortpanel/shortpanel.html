@@ -8,18 +8,28 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-10 w-4/5">
-    <h1 class="pin-l pb-6 w-auto">Shortened Links</h1>
+    <div class="flex">
+        <h1 class="flex-auto pb-6 w-auto">Shortened Links</h1>
+        <form  method="POST" class="flex-none pl-3">
+            <input type="hidden" name="method" value="logout">
+            <button class="w-auto bg-grey-dark hover:bg-grey-darker text-grey-lightest font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                Logout
+            </button>
+        </form>
+        
+    </div>
+    
     <!-- Add Link -->
-    <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4" method="POST" action="redirect.php">
+    <form class="bg-white shadow-lg rounded p-4 mb-6" method="POST" action="redirect.php">
         <input type="hidden" name="method" value="add">
-        <div class="flex flex-wrap -mx-3">
-            <div class="w-1/2 md:w-2/5 px-3 mb-6 md:mb-0">
+        <div class="flex flex-wrap">
+            <div class="w-1/2 md:w-2/5 px-1 mb-6 md:mb-0">
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" name="link" placeholder="Full link">
             </div>
-            <div class="w-1/2 md:w-2/5 px-3">
+            <div class="w-1/2 md:w-2/5 px-1">
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text"  name="short" placeholder="Short alias">
             </div>
-            <div class="w-full md:w-1/5 px-3">
+            <div class="w-full md:w-1/5 pl-3 pr-1">
                 <button class="w-full bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                     Add
                 </button>
