@@ -40,11 +40,12 @@
 
     <div class="links">
         {% for link in links %}
-        <div class="link group relative">
-            <div class="full"><a href="{{ link.link }}" target="_blank">{{ link.link }}</a></div>
-            <div class="short" onclick="popup('{{ link.short }}')">{{ link.short }}</div>
+        <div class="link flex p-7 group relative">
+            <div class="full truncate"><a href="{{ link.link }}" target="_blank">{{ link.link }}</a></div>
+            <div class="short truncate" onclick="popup('{{ link.short }}')">{{ link.short }}</div>
             <div class="clicks">{{ link.clicks }}</div>
-            <div class="edit-button"><img src="/img/edit.svg" onclick="edit('{{ link.short }}')"></div>
+            <div class="button"><img class="max-w-full max-h-20px" src="/img/edit.svg" onclick="edit('{{ link.short }}')"></div>
+            <div class="button"><img class="max-w-full max-h-20px" src="/img/trash.svg" onclick="edit('{{ link.short }}')"></div>
             <div class="card bg-white sm:w-4/5 md:w-2/5 rounded overflow-hidden shadow-lg group-hover:block hidden absolute pin-r">
                 <img class="w-full" src=" {{ link.image }}">
                 <div class="px-6 py-4">
