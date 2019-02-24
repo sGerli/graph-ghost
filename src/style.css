@@ -2,19 +2,8 @@
  @tailwind components;
  @tailwind utilities;
 
-.link {
-    display: flex;
-    padding: 7px;
-}
-
-.full, .short {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .full {
-    width: 60%;
+    width: 55%;
 }
 
 .short {
@@ -25,12 +14,8 @@
     width: 5%;
 }
 
-.edit-button {
+.button {
     width: 5%;
-}
-
-.hidden {
-    display: none;
 }
 
 .edit-box{
