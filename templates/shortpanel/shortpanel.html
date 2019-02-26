@@ -44,7 +44,7 @@
             <div class="full truncate"><a href="{{ link.link }}" target="_blank">{{ link.link }}</a></div>
             <div class="short truncate" onclick="popup('{{ link.short }}')">{{ link.short }}</div>
             <div class="clicks">{{ link.clicks }}</div>
-            <div class="button"><img class="max-w-full max-h-20px cursor-pointer" src="/img/edit.svg" onclick="edit('{{ link.short }}')"></div>
+            <div class="button"><img class="max-w-full max-h-20px cursor-pointer" src="/img/edit.svg" onclick="edit('{{ link.short }}', '{{ link.link }}', '{{ link.title }}', '{{ link.description }}', '{{ link.image }}')"></div>
             <div class="button">
                 <img class="max-w-full max-h-20px cursor-pointer" src="/img/trash.svg" onclick="deleteLink('{{ link.short }}')">
             </div>
@@ -60,18 +60,18 @@
         {% endfor %}
     </div>
 
-    <div class="modal fixed pin w-screen h-screen hidden" id="edit-container">
+    <div class="modal fixed pin w-screen h-screen hidden" id="editModal">
         <div class="modal-card bg-white shadow-lg rounded p-6 mb-6 w-4/5 overflow-auto absolute">
-            <form class="w-full" method="POST">
+            <form class="w-full" method="POST"  action="redirect.php">
                 <div class="flex flex-wrap -mx-3 mb-8">
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="newLink">
+                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="title">
                         Title
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Example Title" name="newLink" id="newLink">
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Example Title" name="title" id="title">
                     </div>
                     <div class="w-full md:w-1/2 px-3">
-                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="newShort">
+                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="image">
                         Thumbnail
                         </label>
                         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="https://example.com/thumb.png" name="image" id="image">
@@ -87,10 +87,10 @@
                 </div>
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="title">
+                        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="newLink">
                         Full link
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="https://example.com" name="title" id="title">
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="https://example.com" name="newLink" id="newLink">
                     </div>
                     <div class="w-full md:w-1/2 px-3">
                         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="newShort">
@@ -99,12 +99,12 @@
                         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="my-example" name="newShort" id="newShort">
                     </div>
                 </div>
-                <input type="hidden" name="method" value="doEdit">
+                <input type="hidden" name="method" value="editLink">
 
-                <input type="hidden" name="oldShort" value="{{ edit.short }}">
+                <input type="hidden" name="oldShort" id="oldShort">
 
                 <div class="flex items-center justify-between">
-                    <button class="w-auto bg-grey-dark hover:bg-grey-darker text-grey-lightest font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"  onclick="cancel()" type="button">
+                    <button class="w-auto bg-grey-dark hover:bg-grey-darker text-grey-lightest font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"  onclick="cancelEdit()" type="button">
                         Cancel
                     </button>
                     <button class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">

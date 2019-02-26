@@ -36,22 +36,6 @@ class ShortSubmitter
     }
 
     /**
-     * @param string $short
-     */
-    public function post_showEdit(string $short) {
-        $edit = $this->db->selectShortLink($short);
-
-        $edit = array_merge(
-            $edit, // ["title", "image", "desc", "link"]
-            ["short" => $short]
-        );
-
-        $data = ["edit" => $edit];
-
-        echo $this->twig->render("shortpanel.html", $data);
-    }
-
-    /**
      * @param string $title
      * @param string $image
      * @param string $desc

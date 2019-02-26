@@ -16,6 +16,15 @@ if ($user = Sentinel::check()) {
                 $short = $_POST["short"];
                 $submitter->post_delete($short);
                 break;
+            case "editLink":
+                $title = $_POST["title"];
+                $image = $_POST["image"];
+                $description = $_POST["desc"];
+                $newLink = $_POST["newLink"];
+                $newShort = $_POST["newShort"];
+                $oldShort = $_POST["oldShort"];
+                $submitter->post_updateLink($title, $image, $description, $oldShort, $newShort, $newLink);
+                break;
             default:
                 header("Location: .");
                 exit;
