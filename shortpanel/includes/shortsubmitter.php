@@ -88,9 +88,9 @@ class ShortSubmitter
      */
     private static function cleanScrapeData(array $scrapeData, string $link){
         $newScrapeData = [
-            "title" => $scrapeData["og:title"],
-            "image" => $scrapeData["og:image"],
-            "description" => $scrapeData["og:description"]
+            "title" => utf8_decode($scrapeData["og:title"]),
+            "image" => utf8_decode($scrapeData["og:image"]),
+            "description" => utf8_decode($scrapeData["og:description"])
         ];
 
         // og:image is often a relative link
