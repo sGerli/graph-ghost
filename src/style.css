@@ -3,7 +3,7 @@
  @tailwind utilities;
 
 .full {
-    width: 55%;
+    width: calc(55% - 4px);
 }
 
 .short {
@@ -16,6 +16,9 @@
 
 .button {
     width: 5%;
+}
+.button.first {
+    margin-right: 4px;
 }
 
 .modal {
@@ -31,6 +34,10 @@
     max-height: calc(100vh - 20%);
 }
 
+.links .link:not(:last-child) {
+    border-bottom: 1px solid #dae1e7;
+}
+
 .link .card {
-    top: 24px;
+    top: 40px;
 }

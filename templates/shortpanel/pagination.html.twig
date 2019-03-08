@@ -1,0 +1,54 @@
+{% spaceless %}
+    {% if lastPage > 1 %}
+
+        {# the number of first and last pages to be displayed #}
+        {% set extremePagesLimit = 1 %}
+
+        {# the number of pages that are displayed around the active page #}
+        {% set nearbyPagesLimit = 2 %}
+
+        {% if showAlwaysFirstAndLast is not defined %}{% set showAlwaysFirstAndLast = true %}{% endif %}
+
+        <nav class="bg-white shadow-lg rounded mt-10 table mx-auto">
+            <ul class="list-reset flex justify-between">
+                {% if currentPage > 1 %}
+                    <li class="page-item py-4"><a class="py-4 md:px-4 px-2 no-underline text-blue hover:text-blue-darker" href="{{ paginationPath}}?p={{ currentPage - 1 }}">&lt;</a></li>
+
+                    {% for i in range(1, extremePagesLimit) if ( i < currentPage - nearbyPagesLimit ) %}
+                        <li class="page-item py-4"><a class="py-4 md:px-4 px-2 no-underline text-blue hover:text-blue-darker" href="{{ paginationPath}}?p={{ i }}">{{ i }}</a></li>
+                    {% endfor %}
+
+                    {% if extremePagesLimit + 1 < currentPage - nearbyPagesLimit %}
+                        <span class="py-4 text-grey-dark">...</span>
+                    {% endif %}
+
+                    {% for i in range(currentPage-nearbyPagesLimit, currentPage-1) if ( i > 0 ) %}
+                        <li class="page-item py-4"><a class="py-4 md:px-4 px-2 no-underline text-blue hover:text-blue-darker" href="{{ paginationPath}}?p={{ i }}">{{ i }}</a></li>
+                    {% endfor %}
+                {% elseif showAlwaysFirstAndLast %}
+                    <li class="page-item py-4"><span class="py-4 md:px-4 px-2 no-underline text-grey-light cursor-not-allowed">&lt;</span></li>
+                {% endif %}
+
+                <li class="page-item py-4 bg-grey"><a class="py-4 md:px-4 px-2 no-underline text-white hover:text-grey-lightest" href="{{ paginationPath}}?p={{ currentPage }}">{{ currentPage }}</a></li>
+
+                {% if currentPage + 1 < lastPage %}
+                    {% for i in range(currentPage+1, currentPage + nearbyPagesLimit) if ( i <= lastPage ) %}
+                        <li class="page-item py-4"><a class="py-4 md:px-4 px-2 no-underline text-blue hover:text-blue-darker" href="{{ paginationPath}}?p={{ i }}">{{ i }}</a></li>
+                    {% endfor %}
+
+                    {% if  (lastPage - extremePagesLimit) > (currentPage + nearbyPagesLimit) %}
+                        <span class="py-4 text-grey-dark">...</span>
+                    {% endif %}
+
+                    {% for i in range(lastPage - extremePagesLimit+1, lastPage) if ( i > currentPage + nearbyPagesLimit ) %}
+                        <li class="page-item py-4"><a class="py-4 md:px-4 px-2 no-underline text-blue hover:text-blue-darker" href="{{ paginationPath}}?p={{ i }}">{{ i }}</a></li>
+                    {% endfor %}
+
+                    <li class="page-item py-4"><a class="py-4 md:px-4 px-2 no-underline text-blue hover:text-blue-darker" href="{{ paginationPath}}?p={{ currentPage + 1 }}">&gt;</a></li>
+                {% elseif showAlwaysFirstAndLast %}
+                    <li class="page-item py-4"><span class="py-4 md:px-4 px-2 no-underline text-grey-light cursor-not-allowed">&gt;</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endspaceless %}

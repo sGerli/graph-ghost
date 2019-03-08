@@ -50,15 +50,31 @@ class Database
             $title = $scrape["title"];
             $image = $scrape["image"];
             $description = $scrape["description"];
-            $query = $this->db->prepare("INSERT INTO short_links VALUES (?, ?, ?, ?, ?, ?)");
-            $clicks = 0;
-            $query->bind_param("sssssi", $title, $image, $description, $short, $link, $clicks);
+            $query = $this->db->prepare("INSERT INTO short_links (title, image, description, short, link) VALUES (?, ?, ?, ?, ?)");
+            $query->bind_param("sssss", $title, $image, $description, $short, $link);
 
             if (!$query || !$query->execute()) return false;
 
             $query->close();
             return true;
         }
+    }
+
+       /**
+     * @return int|null
+     */
+    public function getPageCount() {
+        $query = $this->db->prepare("SELECT COUNT(*) FROM short_links");
+
+        if (!$query || !$query->execute()) return null;
+
+        $query->bind_result($itemCount);
+        $query->fetch();
+        $query->close();
+
+        $count = $itemCount / 10;
+
+        return $count;
     }
 
     /**
@@ -87,9 +103,11 @@ class Database
      * Used for /shortpanel
      * @return array|null [ link, short ]
      */
-    public function selectShortLinks() {
+    public function selectShortLinks(int $page) {
         $data = [];
-        $query = $this->db->prepare("SELECT title, image, description, short, link, clicks FROM short_links ORDER BY short");
+        $query = $this->db->prepare("SELECT title, image, description, short, link, clicks FROM short_links ORDER BY created DESC LIMIT ?,10");
+        $startIndex = $page * 10;
+        $query->bind_param("i", $startIndex);
         if (!$query || !$query->execute()) return null;
         $query->bind_result($title, $img, $desc, $short, $link, $clicks);
         while ($query->fetch()) {

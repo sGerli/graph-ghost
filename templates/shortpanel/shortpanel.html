@@ -19,7 +19,6 @@
         
     </div>
     
-    <!-- Add Link -->
     <form class="bg-white shadow-lg rounded p-4 mb-6" method="POST" action="redirect.php">
         <input type="hidden" name="method" value="addLink">
         <div class="flex flex-wrap">
@@ -40,15 +39,15 @@
 
     <div class="links">
         {% for link in links %}
-        <div class="link flex p-7 group relative">
+        <div class="link flex py-2 group relative">
             <div class="full truncate"><a href="{{ link.link }}" target="_blank">{{ link.link }}</a></div>
             <div class="short truncate" onclick="popup('{{ link.short }}')">{{ link.short }}</div>
             <div class="clicks">{{ link.clicks }}</div>
-            <div class="button"><img class="max-w-full max-h-20px cursor-pointer" src="/img/edit.svg" onclick="edit('{{ link.short }}', '{{ link.link }}', '{{ link.title }}', '{{ link.description }}', '{{ link.image }}')"></div>
+            <div class="button first"><img class="max-w-full max-h-20px cursor-pointer" src="/img/edit.svg" onclick="edit('{{ link.short }}', '{{ link.link }}', '{{ link.title }}', '{{ link.description }}', '{{ link.image }}')"></div>
             <div class="button">
                 <img class="max-w-full max-h-20px cursor-pointer" src="/img/trash.svg" onclick="deleteLink('{{ link.short }}')">
             </div>
-            <div class="card bg-white sm:w-4/5 md:w-2/5 rounded overflow-hidden shadow-lg group-hover:block hidden absolute pin-r">
+            <div class="card bg-white sm:w-4/5 md:w-2/5 rounded overflow-hidden shadow-lg group-hover:block hidden absolute pin-r z-10">
                 <img class="w-full" src=" {{ link.image }}">
                 <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">{{ link.title}}</div>
@@ -59,6 +58,11 @@
         
         {% endfor %}
     </div>
+    {{ include('pagination.html.twig', { 
+        currentPage: currentPage,
+        lastPage: pageCount,
+        paginationPath: pagePath
+    }) }}
 
     <div class="modal fixed pin w-screen h-screen hidden" id="editModal">
         <div class="modal-card bg-white shadow-lg rounded p-6 mb-6 w-4/5 overflow-auto absolute">

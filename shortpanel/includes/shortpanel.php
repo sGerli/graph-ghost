@@ -15,11 +15,16 @@ class ShortPanel
     /**
      * Displays all links from db as the main panel
      */
-    public function get_links() {
-        $links = $this->db->selectShortLinks();
+    public function get_links(int $currentPage) {
+        $links = $this->db->selectShortLinks($currentPage - 1);
+        $pageCount = $this->db->getPageCount();
+        $url = 'https://' . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
         $data = [
-            "links" => $links
+            "links" => $links,
+            "pageCount" => $pageCount + 1,
+            "currentPage" => $currentPage,
+            "pagePath" => $url
         ];
 
         if (isset($_SESSION["flash"]) && $_SESSION["flash"]) {

@@ -5,8 +5,9 @@ require_once("includes/authentication.php");
 
 if ($user = Sentinel::check()) {
     checkLogout();
+    $currentPage = isset($_GET["p"]) ? (int) $_GET["p"] : 1;
     $panel = new ShortPanel();
-    $panel->get_links();
+    $panel->get_links($currentPage);
 } else {
     header("Location: login.php");
 }
