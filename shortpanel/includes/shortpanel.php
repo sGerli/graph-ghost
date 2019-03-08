@@ -18,13 +18,16 @@ class ShortPanel
     public function get_links(int $currentPage) {
         $links = $this->db->selectShortLinks($currentPage - 1);
         $pageCount = $this->db->getPageCount();
-        $url = 'https://' . $_SERVER['HTTP_HOST'] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+        $baseUrl = "https://" . $_SERVER["HTTP_HOST"];
+        $url = $baseUrl . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+
 
         $data = [
             "links" => $links,
             "pageCount" => $pageCount + 1,
             "currentPage" => $currentPage,
-            "pagePath" => $url
+            "pagePath" => $url,
+            "baseUrl" => $baseUrl
         ];
 
         if (isset($_SESSION["flash"]) && $_SESSION["flash"]) {
@@ -32,7 +35,7 @@ class ShortPanel
                 $data,
                 ["flash" => $_SESSION["flash"]]
             );
-            unset($_SESSION['flash']);
+            unset($_SESSION["flash"]);
         }
 
         echo $this->twig->render("/shortpanel.html", $data);

@@ -41,7 +41,7 @@
         {% for link in links %}
         <div class="link flex py-2 group relative">
             <div class="full truncate"><a href="{{ link.link }}" target="_blank">{{ link.link }}</a></div>
-            <div class="short truncate" onclick="popup('{{ link.short }}')">{{ link.short }}</div>
+            <div class="short truncate"><a href="{{ baseUrl }}/{{ link.short }}" target="_blank">{{ baseUrl }}/{{ link.short }}</a></div>
             <div class="clicks">{{ link.clicks }}</div>
             <div class="button first"><img class="max-w-full max-h-20px cursor-pointer" src="/img/edit.svg" onclick="edit('{{ link.short }}', '{{ link.link }}', '{{ link.title }}', '{{ link.description }}', '{{ link.image }}')"></div>
             <div class="button">
@@ -51,7 +51,7 @@
                 <img class="w-full" src=" {{ link.image }}">
                 <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">{{ link.title}}</div>
-                    <p  class="text-grey-darker text-base">{{ link.description }}</p>
+                    <p class="text-grey-darker text-base">{{ link.description }}</p>
                 </div>
             </div>
         </div>
