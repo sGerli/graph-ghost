@@ -1,12 +1,12 @@
 {
-  "name": "pyang/open-graph-shell",
+  "name": "sgerli/open-graph-shell",
   "description": "Open graph wrapper and link shortener",
   "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
     {
-      "name": "Peter Yang",
-      "email": "me@peteryang.io"
+      "name": "Stefano Gerli",
+      "email": "mail@sgerli.me"
     }
   ],
   "require": {

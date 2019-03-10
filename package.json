@@ -1,5 +1,5 @@
 {
-  "name": "open-graph-shell",
+  "name": "graph-ghost",
   "version": "1.0.0",
   "devDependencies": {
     "tailwindcss": "^0.7.4"

@@ -1,4 +1,5 @@
-# Link Shortener with Custom Open Graph Mirroring
+# Graph Ghost
+Link Shortener with Custom Open Graph Mirroring
 ## Installation Instructions
 1. Copy the files to your server's root directory
 2. Ensure that your server config allows the use of .htaccess
