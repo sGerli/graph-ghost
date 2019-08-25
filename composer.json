@@ -2,7 +2,7 @@
   "name": "sgerli/graph-ghost",
   "description": "Open graph wrapper and link shortener",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "Stefano Gerli",

@@ -1,6 +1,7 @@
 {
   "name": "graph-ghost",
   "version": "1.0.0",
+  "license": "MIT",
   "devDependencies": {
     "tailwindcss": "^0.7.4"
   }
