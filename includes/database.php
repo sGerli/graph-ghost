@@ -72,7 +72,7 @@ class Database
         $query->fetch();
         $query->close();
 
-        $count = $itemCount / 10;
+        $count = intdiv($itemCount, 10);
 
         return $count;
     }
